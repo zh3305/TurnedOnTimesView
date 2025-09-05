@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 开关机记录分析工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        input[type="date"], select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="date"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5a67d8;
+        }
+        
+        .refresh-btn {
+            background: #48bb78;
+        }
+        
+        .refresh-btn:hover {
+            background: #38a169;
+        }
+        
+        .export-btn {
+            background: #ed8936;
+        }
+        
+        .export-btn:hover {
+            background: #dd6b20;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f7fafc;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        
+        th:hover {
+            background: #edf2f7;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f7fafc;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-normal {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-abnormal {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .status-sleep {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .duration {
+            font-family: 'Courier New', monospace;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Windows 开关机记录分析工具</h1>
+            <p>分析系统事件日志，提供详细的计算机活动会话历史记录</p>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>开始日期：</label>
+                <input type="date" id="startDate" value="2024-01-01">
+            </div>
+            
+            <div class="control-group">
+                <label>结束日期：</label>
+                <input type="date" id="endDate" value="2024-12-31">
+            </div>
+            
+            <div class="control-group">
+                <label>关机类型：</label>
+                <select id="shutdownType">
+                    <option value="all">全部</option>
+                    <option value="normal">正常关机</option>
+                    <option value="abnormal">意外关机</option>
+                    <option value="sleep">睡眠/唤醒</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button class="refresh-btn" onclick="refreshData()">🔄 刷新数据</button>
+                <button class="export-btn" onclick="exportData()">📥 导出数据</button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>总会话数</h3>
+                <div class="value" id="totalSessions">156</div>
+            </div>
+            <div class="stat-card">
+                <h3>正常关机</h3>
+                <div class="value" id="normalShutdowns">142</div>
+            </div>
+            <div class="stat-card">
+                <h3>意外关机</h3>
+                <div class="value" id="abnormalShutdowns">8</div>
+            </div>
+            <div class="stat-card">
+                <h3>睡眠/唤醒</h3>
+                <div class="value" id="sleepCycles">6</div>
+            </div>
+            <div class="stat-card">
+                <h3>总运行时间</h3>
+                <div class="value" id="totalRuntime">1,248小时</div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">启动时间 ↕</th>
+                        <th onclick="sortTable(1)">关机时间 ↕</th>
+                        <th onclick="sortTable(2)">持续时间 ↕</th>
+                        <th onclick="sortTable(3)">关机原因 ↕</th>
+                        <th onclick="sortTable(4)">关机类型 ↕</th>
+                        <th onclick="sortTable(5)">关机进程 ↕</th>
+                        <!-- 新增：最后事件时间列 -->
+                        <th onclick="sortTable(6)">最后事件时间 ↕</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTable">
+                    <tr>
+                        <td>2024-09-05 08:30:15</td>
+                        <td>2024-09-05 18:45:32</td>
+                        <td class="duration">10:15:17</td>
+                        <td>用户正常关机</td>
+                        <td><span class="status-badge status-normal">正常关机</span></td>
+                        <td>explorer.exe</td>
+                        <td class="last-event">2024-09-05 18:45:32</td>
+                    </tr>
+                    <tr>
+                        <td>2024-09-04 09:15:42</td>
+                        <td>2024-09-04 23:58:11</td>
+                        <td class="duration">14:42:29</td>
+                        <td>系统更新后重启</td>
+                        <td><span class="status-badge status-normal">正常重启</span></td>
+                        <td>svchost.exe</td>
+                        <td class="last-event">2024-09-04 23:58:11</td>
+                    </tr>
+                    <tr>
+                        <td>2024-09-03 07:45:20</td>
+                        <td>2024-09-03 15:30:45</td>
+                        <td class="duration">07:45:25</td>
+                        <td>意外断电</td>
+                        <td><span class="status-badge status-abnormal">意外关机</span></td>
+                        <td>-</td>
+                        <td class="last-event">2024-09-03 15:30:45</td>
+                    </tr>
+                    <tr>
+                        <td>2024-09-02 12:00:00</td>
+                        <td>2024-09-02 12:30:00</td>
+                        <td class="duration">00:30:00</td>
+                        <td>进入睡眠状态</td>
+                        <td><span class="status-badge status-sleep">睡眠</span></td>
+                        <td>-</td>
+                        <td class="last-event">2024-09-02 12:30:00</td>
+                    </tr>
+                    <tr>
+                        <td>2024-09-01 10:20:30</td>
+                        <td>2024-09-01 20:15:18</td>
+                        <td class="duration">09:54:48</td>
+                        <td>应用程序请求重启</td>
+                        <td><span class="status-badge status-normal">正常重启</span></td>
+                        <td>installer.exe</td>
+                        <td class="last-event">2024-09-01 20:15:18</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟数据刷新
+        function refreshData() {
+            const table = document.getElementById('dataTable');
+            table.innerHTML = '<tr><td colspan="7" class="loading">正在加载数据</td></tr>';
+            
+            setTimeout(() => {
+                // 这里可以添加实际的数据加载逻辑
+                location.reload();
+            }, 2000);
+        }
+        
+        // 导出数据功能
+        function exportData() {
+            alert('导出功能开发中...\n支持格式：CSV, HTML, XML');
+        }
+        
+        // 表格排序功能
+        let sortOrder = {};
+        function sortTable(columnIndex) {
+            const table = document.getElementById('dataTable');
+            const rows = Array.from(table.rows);
+            const isAscending = !sortOrder[columnIndex];
+            
+            sortOrder = {};
+            sortOrder[columnIndex] = isAscending;
+            
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent;
+                const bText = b.cells[columnIndex].textContent;
+                
+                if (columnIndex === 2) { // 持续时间列
+                    const aSeconds = timeToSeconds(aText);
+                    const bSeconds = timeToSeconds(bText);
+                    return isAscending ? aSeconds - bSeconds : bSeconds - aSeconds;
+                }
+                
+                if (columnIndex === 0 || columnIndex === 1 || columnIndex === 6) { // 时间列
+                    const aDate = new Date(aText);
+                    const bDate = new Date(bText);
+                    return isAscending ? aDate - bDate : bDate - aDate;
+                }
+                
+                return isAscending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            });
+            
+            rows.forEach(row => table.appendChild(row));
+        }
+        
+        // 将时间字符串转换为秒数
+        function timeToSeconds(timeStr) {
+            const parts = timeStr.split(':').map(Number);
+            if (parts.length === 3) {
+                return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            }
+            return 0;
+        }
+        
+        // 筛选功能
+        document.getElementById('shutdownType').addEventListener('change', function() {
+            const selectedType = this.value;
+            const rows = document.querySelectorAll('#dataTable tr');
+            
+            rows.forEach(row => {
+                const typeCell = row.cells[4];
+                if (typeCell) {
+                    const badge = typeCell.querySelector('.status-badge');
+                    if (badge) {
+                        const shouldShow = selectedType === 'all' || 
+                            (selectedType === 'normal' && badge.classList.contains('status-normal')) ||
+                            (selectedType === 'abnormal' && badge.classList.contains('status-abnormal')) ||
+                            (selectedType === 'sleep' && badge.classList.contains('status-sleep'));
+                        
+                        row.style.display = shouldShow ? '' : 'none';
+                    }
+                }
+            });
+        });
+        
+        // 日期范围筛选
+        document.getElementById('startDate').addEventListener('change', filterByDate);
+        document.getElementById('endDate').addEventListener('change', filterByDate);
+        
+        function filterByDate() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const rows = document.querySelectorAll('#dataTable tr');
+            
+            rows.forEach(row => {
+                const startTimeCell = row.cells[0];
+                if (startTimeCell) {
+                    const rowDate = new Date(startTimeCell.textContent.split(' ')[0]);
+                    const shouldShow = rowDate >= startDate && rowDate <= endDate;
+                    row.style.display = shouldShow ? '' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

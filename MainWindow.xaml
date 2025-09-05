@@ -1,0 +1,205 @@
+<Window x:Class="TurnedOnTimesView.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TurnedOnTimesView"
+        xmlns:vm="clr-namespace:TurnedOnTimesView.ViewModels"
+        xmlns:converters="clr-namespace:TurnedOnTimesView.Converters"
+        mc:Ignorable="d"
+        Title="Windows 开关机记录分析工具" Height="700" Width="1200"
+        Background="{StaticResource BackgroundColor}">
+    
+    <Window.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 标题区域 -->
+        <Border Grid.Row="0" 
+                CornerRadius="10" 
+                Padding="30"
+                Margin="0,0,0,20">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#667eea" Offset="0"/>
+                    <GradientStop Color="#764ba2" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect Color="#20000000" BlurRadius="6" ShadowDepth="4" Opacity="0.3"/>
+            </Border.Effect>
+            <StackPanel>
+                <TextBlock Text="Windows 开关机记录分析工具" Style="{StaticResource HeaderTitleStyle}"/>
+                <TextBlock Text="分析系统事件日志，提供详细的计算机活动会话历史记录" Style="{StaticResource HeaderSubtitleStyle}"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- 控制面板 -->
+        <Border Grid.Row="1" Style="{StaticResource ControlPanelStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- 开始日期 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,20,0">
+                    <TextBlock Text="开始日期：" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding StartDate}" Style="{StaticResource DatePickerStyle}" Width="150"/>
+                </StackPanel>
+                
+                <!-- 结束日期 -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,20,0">
+                    <TextBlock Text="结束日期：" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding EndDate}" Style="{StaticResource DatePickerStyle}" Width="150"/>
+                </StackPanel>
+                
+                <!-- 关机类型 -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,20,0">
+                    <TextBlock Text="关机类型：" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox SelectedValue="{Binding ShutdownType}" Style="{StaticResource ComboBoxStyle}" Width="150">
+                        <ComboBoxItem Content="全部" Tag="all"/>
+                        <ComboBoxItem Content="正常关机" Tag="normal"/>
+                        <ComboBoxItem Content="意外关机" Tag="abnormal"/>
+                        <ComboBoxItem Content="睡眠/唤醒" Tag="sleep"/>
+                    </ComboBox>
+                </StackPanel>
+                
+                <!-- 按钮 -->
+                <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="🔄 刷新数据" Command="{Binding RefreshCommand}" Style="{StaticResource RefreshButtonStyle}" Margin="0,0,10,0"/>
+                    <Button Content="📥 导出数据" Command="{Binding ExportCommand}" Style="{StaticResource ExportButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <!-- 统计信息 -->
+        <UniformGrid Grid.Row="2" Rows="1" Margin="0,0,0,20">
+            <Border Style="{StaticResource StatCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="总会话数" Style="{StaticResource StatCardTitleStyle}"/>
+                    <TextBlock Text="{Binding TotalSessions}" Style="{StaticResource StatCardValueStyle}"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource StatCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="正常关机" Style="{StaticResource StatCardTitleStyle}"/>
+                    <TextBlock Text="{Binding NormalShutdowns}" Style="{StaticResource StatCardValueStyle}"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource StatCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="意外关机" Style="{StaticResource StatCardTitleStyle}"/>
+                    <TextBlock Text="{Binding AbnormalShutdowns}" Style="{StaticResource StatCardValueStyle}"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource StatCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="睡眠/唤醒" Style="{StaticResource StatCardTitleStyle}"/>
+                    <TextBlock Text="{Binding SleepCycles}" Style="{StaticResource StatCardValueStyle}"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource StatCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="总运行时间" Style="{StaticResource StatCardTitleStyle}"/>
+                    <TextBlock Text="{Binding TotalRuntime}" Style="{StaticResource StatCardValueStyle}"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+        
+        <!-- 数据表格 -->
+        <Border Grid.Row="3" Background="White" CornerRadius="10" BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect Color="#20000000" BlurRadius="4" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid>
+                <DataGrid ItemsSource="{Binding BootSessions}" 
+                          Style="{StaticResource DataGridStyle}"
+                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                          CellStyle="{StaticResource DataGridCellStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="启动时间" Binding="{Binding StartupTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="150"/>
+                        <DataGridTextColumn Header="关机时间" Binding="{Binding ShutdownTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="150"/>
+                        <DataGridTextColumn Header="持续时间" Binding="{Binding Duration, StringFormat=hh\\:mm\\:ss}" Width="100">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontFamily" Value="Courier New"/>
+                                    <Setter Property="Foreground" Value="{StaticResource LightTextColor}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="关机原因" Binding="{Binding ShutdownReason}" Width="*"/>
+                        <DataGridTemplateColumn Header="关机类型" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Style>
+                                            <Style TargetType="Border" BasedOn="{StaticResource StatusBadgeStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ShutdownType}" Value="正常关机">
+                                                        <Setter Property="Background" Value="{StaticResource NormalStatusBackground}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ShutdownType}" Value="意外关机">
+                                                        <Setter Property="Background" Value="{StaticResource AbnormalStatusBackground}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ShutdownType}" Value="睡眠">
+                                                        <Setter Property="Background" Value="{StaticResource SleepStatusBackground}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding ShutdownType}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="FontSize" Value="12"/>
+                                                    <Setter Property="FontWeight" Value="Medium"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ShutdownType}" Value="正常关机">
+                                                            <Setter Property="Foreground" Value="{StaticResource NormalStatusForeground}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ShutdownType}" Value="意外关机">
+                                                            <Setter Property="Foreground" Value="{StaticResource AbnormalStatusForeground}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ShutdownType}" Value="睡眠">
+                                                            <Setter Property="Foreground" Value="{StaticResource SleepStatusForeground}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="关机进程" Binding="{Binding ShutdownProcess}" Width="120"/>
+                        <!-- 新增：最后事件时间列 -->
+                        <DataGridTextColumn Header="最后事件时间" Binding="{Binding LastEventTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="150"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                
+                <!-- 加载指示器 -->
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Rectangle Fill="#80FFFFFF"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="正在加载数据..." FontSize="16" Foreground="{StaticResource LightTextColor}" Margin="0,0,0,10"/>
+                        <ProgressBar IsIndeterminate="True" Width="200" Height="5"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

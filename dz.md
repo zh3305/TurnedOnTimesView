@@ -1,0 +1,47 @@
+Windows 开关机记录分析WPF软件设计方案执行摘要本报告详细阐述了一个C#/.NET 9 WPF应用程序的架构蓝图，该程序旨在分析Windows事件日志，以提供计算机活动会话的按时间顺序排列的历史记录，并复制和扩展TurnedOnTimesView的核心功能。该方案建议利用现代、高性能的System.Diagnostics.Eventing.Reader API，通过XPath查询有效地过滤和检索系统日志。该应用程序的核心是一个强大的状态机算法，旨在准确配对启动和关机事件，即使在涉及意外关机和Windows快速启动等复杂场景下也能保持准确。该应用程序的设计遵循Model-View-ViewModel（MVVM）模式，以确保关注点分离、可维护性和专业的UI呈现。1. Windows事件日志分析项目简介项目目标本项目的目标是设计并构建一个现代化、直观且高度准确的应用程序，用于跟踪Windows PC的电源状态。该程序将作为TurnedOnTimesView的增强型开源替代品，提供对计算机使用历史的深入洞察。通过分析系统事件日志，该程序不仅能识别启动和关机时间，还能解析关机的原因和类型，例如正常关机、因崩溃或断电导致的意外关机以及睡眠/唤醒周期。TurnedOnTimesView是一款被广泛使用的工具，它通过分析Windows事件日志来检测电脑的开启时间段，并为每个时间段显示启动时间、关机时间、持续时间、关机原因和关机进程等信息 1。我们的设计方案将以此为基础，并引入更先进的技术和更健壮的分析逻辑。范围定义该项目的范围将集中在分析本地系统的核心事件日志（主要是System日志，部分涉及Application日志），以报告关键的电源状态转换。分析将涵盖以下核心场景：系统启动： 检测电脑何时开机并准备就绪。正常关机： 识别由用户或应用程序主动发起的关机或重启。意外关机： 区分因系统崩溃、断电或强制关机等非正常原因导致的关机。睡眠/唤醒周期： 将睡眠和唤醒事件视为特殊的“关机/开机”周期进行处理 2。该方案还将提出一套逻辑，用于处理事件日志缺失或不完整的情况，例如由于不当关机或日志被清理而导致的记录不全 2。技术栈本报告为该项目推荐的技术栈是：使用C#语言、.NET 9框架和WPF（Windows Presentation Foundation）构建桌面应用程序，并采用MVVM（Model-View-ViewModel）设计模式。选择这些技术有以下原因：WPF是为Windows桌面应用程序构建丰富、数据驱动用户界面的理想框架。它提供了强大的数据绑定和模板化功能，这对于将复杂的数据（如会话记录）清晰地呈现在UI中至关重要 6。C#和.NET 9提供了高性能、现代化的开发环境，并能无缝集成到Windows API中。而MVVM模式则为应用程序的架构奠定了坚实基础，确保了逻辑层和视图层的清晰分离，极大地提高了代码的可维护性和可测试性。2. 基础：理解Windows事件日志事件日志结构和关键来源要准确分析Windows会话历史，首先必须理解Windows事件日志服务的结构。Windows事件日志是操作系统记录系统、安全和应用程序事件的集中式存储库 9。对于电源状态分析，最核心的数据源是“Windows日志”下的“系统”日志。该日志记录了与操作系统组件相关的事件，包括启动和关机事件。其他重要的日志来源包括“应用程序和服务日志”，其中包含诸如Kernel-Power和Power-Troubleshooter等提供程序记录的详细信息 5。会话分析的核心事件ID重建完整的系统会话时间线需要综合分析多个事件ID，因为单一事件通常不足以描述会话的全貌。以下是本次分析中使用的关键事件ID及其作用的详细分类：系统启动事件事件ID 6005：来源为EventLog，其描述通常为“事件日志服务已启动”5。该事件在系统启动时记录，是判断系统启动时间的可靠标志。事件ID 6009：来源为EventLog，该事件提供系统启动时的详细信息，如操作系统版本和构建号 14。它与6005事件几乎同时记录，共同标记了系统会话的开始。正常关机事件事件ID 6006：来源为EventLog，该事件描述为“事件日志服务已停止”5。它标志着事件日志服务的正常停止，通常意味着系统已干净地关机。事件ID 1074：来源为USER32，该事件记录了由用户或应用程序发起的关机或重启 2。该事件特别有用，因为它包含了发起关机或重启的进程、用户、原因代码和关机类型等详细信息。通过解析这些信息，可以确定是用户手动操作、系统更新还是应用程序（如shutdown.exe）发起的关机 14。意外事件和崩溃事件ID 6008：来源为EventLog，该事件在系统启动时记录，表明上一次关机是非正常的 5。事件ID 41：来源为Kernel-Power，该事件是系统意外重启的关键信号 2。它表示系统在没有干净关机的情况下进行了重启，这可能是由于系统无响应、崩溃或意外断电所致 2。该事件的描述中包含了BugcheckCode等数据，可以为蓝屏死机（BSOD）提供更精确的诊断线索 18。事件ID 1001：来源为WER-SystemErrorReporting，该事件记录了系统从蓝屏错误（bug check）中重启的详细信息 3。睡眠/唤醒事件事件ID 42：来源为Kernel-Power，表示系统正在进入睡眠状态 2。事件ID 1：来源为Power-Troubleshooter，表示系统已从睡眠状态恢复 2。这些事件ID共同构成了一幅完整的系统生命周期图。单独一个事件，比如6005，只提供了会话的起点。要确定会话的终点，我们需要寻找后续的6006或1074事件。而如果找不到这些事件，并且下一个事件是6005，那么我们就有理由推断前一个会话是非正常结束的，这个推断可以由6008或41事件得到证实 10。通过这种方式，应用程序能够将看似不相关的日志条目串联成一个有意义的会话故事，这正是本报告所提出的核心逻辑。表1：会话跟踪的关键Windows事件ID事件ID来源描述在会话分析中的作用6005EventLog事件日志服务已启动标记会话的开始，即系统启动时间。6009EventLog提供OS版本信息标记会话的开始，与6005一同确认系统启动。6006EventLog事件日志服务已停止标记会话的结束，即正常关机时间。1074USER32用户或应用发起的关机/重启标记会话的结束，提供关机原因和进程信息。6008EventLog上次关机不正常标记意外关机，用于确认6006缺失的原因。41Kernel-Power未干净关机就重启标记意外关机，常与系统崩溃或断电相关。1001WER-SystemErrorReportingBug check提供系统崩溃的详细原因。42Kernel-Power进入睡眠标记进入睡眠状态，可视为关机。1Power-Troubleshooter从睡眠中恢复标记从睡眠中唤醒，可视为开机。3. 数据获取和处理引擎选择正确的API：性能和可扩展性在处理Windows事件日志时，开发人员面临的首要挑战是日志文件可能非常庞大，包含数以万计的条目 21。传统的.NET API System.Diagnostics.EventLog虽然简单易用，但存在一个根本性的缺陷：它会先将所有日志条目加载到内存中，然后再进行迭代和筛选 21。这种方法在面对大型日志文件时会导致严重的性能问题和高内存消耗，使得应用程序响应迟缓。因此，本方案强烈建议使用现代化的System.Diagnostics.Eventing.Reader API。该API在.NET 3.5中引入 21，它通过使用XPath查询，实现了对事件日志的定向、高性能检索 21。开发者可以构建一个精确的过滤器，只检索满足特定条件的事件，从而避免加载不必要的数据。这直接解决了性能瓶颈。值得注意的是，TurnedOnTimesView本身在1.40版本中也引入了“新事件日志API”选项以解决其在Windows 10上的兼容性问题和性能瓶颈 2。这有力地证明了该技术挑战的普遍性以及使用新API的必要性。使用XPath实现定向数据检索System.Diagnostics.Eventing.Reader的核心是EventLogQuery类，它接受一个XPath查询字符串来定义检索标准。以下是一个构建查询的C#代码示例，用于一次性高效地检索所有相关的启动、关机和意外事件：C#string query = @"*]";
+EventLogQuery eventsQuery = new EventLogQuery("System", PathType.LogName, query);
+try
+{
+    using (EventLogReader logReader = new EventLogReader(eventsQuery))
+    {
+        for (EventRecord eventRecord = logReader.ReadEvent(); eventRecord!= null; eventRecord = logReader.ReadEvent())
+        {
+            // 在此处理事件记录
+        }
+    }
+}
+catch (EventLogNotFoundException e)
+{
+    // 处理日志未找到的异常
+}
+该查询遵循XPath语法，通过or运算符组合多个事件ID 21。这种方法确保了应用程序只处理最少的必要数据，从而实现快速、高效的加载。健壮的事件配对算法：状态机方法用户特别关注如何“避免重复信息显示”。这并非一个简单的去重问题，而是一个逻辑配对问题。一个会话（session）是一个逻辑概念，而非单一的物理事件。简单地列出所有启动和关机事件会导致令人困惑的输出，例如一个启动事件后面跟着多个关机事件或根本没有关机事件。真正的挑战在于将启动事件与其对应的结束事件进行准确配对，从而构建一个清晰的会话时间线。为此，本方案提出了一个基于状态机的健壮算法，该算法能够系统地处理各种事件序列和边缘情况。该算法的核心逻辑如下：首先，利用XPath查询检索所有相关的事件（41、1074、6005、6006、6008），并按时间戳进行升序排序 2。创建一个自定义类BootSession来存储每个会话的最终记录，包含StartupTime、ShutdownTime、Duration、ShutdownReason和ShutdownType等属性。遍历排序后的事件列表，并维护一个“当前会话”的状态。处理边缘情况以确保准确性：意外关机： 如果在处理过程中遇到了一个6005（启动）事件，但之前没有找到对应的6006或1074事件，这意味着上一个会话是非正常结束的。此时，算法应将前一个会话的ShutdownTime设置为当前6005事件的时间，并将ShutdownType标记为“意外关机”2。如果前一个会话的结束时间可以由6008或41事件精确确定，则以这些事件的时间戳为准。快速启动挑战： Windows的“快速启动”功能会使“关机”行为更像是一种休眠，而非完全关闭 5。这导致正常的6006事件可能不会被记录。算法需要识别这种混合状态。一个完整的重启或关机通常会记录1074或6006事件，因此这些事件的存在是判断是否为完整关机的关键指标 5。重复信息：所谓的“重复”问题，根源在于未能正确地将逻辑上的会话开始和结束进行配对。通过这个状态机算法，每个6005事件都会被精确地配对到其逻辑上的结束事件，无论是6006、1074，还是一个由非正常关机导致的隐含结束时间。最终，呈现给用户的将是一个干净、无冗余的会话列表，每个条目都代表一个完整的会话周期，这直接回答了用户关于避免重复信息的具体要求。表2：会话数据模型（BootSession）定义属性名称类型描述数据来源StartupTimeDateTime系统的启动时间Event ID 6005 或 Event ID 6009ShutdownTimeDateTime系统的关机时间Event ID 6006 或 Event ID 1074DurationTimeSpan会话的持续时间ShutdownTime - StartupTimeShutdownReasonstring关机原因Event ID 1074 事件数据ShutdownTypestring关机类型（正常、意外、睡眠等）根据配对事件类型判断 (1074, 41, 42)表3：事件配对算法逻辑当前状态传入事件相应操作新状态无活动会话6005 (启动)创建新会话，记录StartupTime存在活动会话存在活动会话6006 或 1074 (关机)结束当前会话，记录ShutdownTime、Reason，并保存会话记录无活动会话存在活动会话6005 (启动)将当前会话标记为“意外关机”，结束并保存记录。创建新会话。存在活动会话存在活动会话42 (睡眠)结束当前会话，记录ShutdownType为“睡眠”，并保存记录。无活动会话无活动会话1 (唤醒)记录为“唤醒”，但无需创建新会话，等待6005启动事件。无活动会话4. 软件架构：Model-View-ViewModel（MVVM）模式MVVM模式的合理性MVVM模式被广泛认为是WPF应用程序开发的最佳实践，特别适用于需要将复杂逻辑与用户界面分离的场景 29。该模式将应用程序分为三个核心组件：Model（模型）： 业务逻辑和数据层。它独立于UI，提供数据的结构和操作方法。View（视图）： 用户界面层。它只负责数据的呈现，不包含任何业务逻辑或数据操作代码。ViewModel（视图模型）： 连接模型和视图的中间层。它封装了视图的逻辑，并通过数据绑定将模型中的数据暴露给视图。对于本应用程序，MVVM模式的优势在于：复杂的事件配对算法和数据处理逻辑可以完全在ViewModel中实现，而UI（DataGrid）则通过简单的绑定来自动显示处理后的数据 29。这种分离使得测试（特别是单元测试）变得非常容易，且UI设计人员和逻辑开发人员可以并行工作，互不干扰 31。模型：定义BootSession类BootSession类将作为应用程序的数据模型，代表一个完整的会话记录。该类将包含以下公共属性，以便WPF的DataGrid可以轻松地进行数据绑定：C#public class BootSession
+{
+    public DateTime StartupTime { get; set; }
+    public DateTime? ShutdownTime { get; set; }
+    public TimeSpan Duration { get; set; }
+    public string ShutdownReason { get; set; }
+    public string ShutdownType { get; set; }
+    public string ShutdownProcess { get; set; }
+    public string ShutdownCode { get; set; }
+}
+视图模型：逻辑层ViewModel是应用程序的大脑。它将：调用事件日志引擎来检索原始事件数据。执行事件配对算法，将原始事件转换为结构化的BootSession对象列表。通过一个ObservableCollection<BootSession>集合将处理后的数据暴露给视图 29。ObservableCollection的优势在于，当数据发生变化（如加载新条目）时，它会自动通知绑定的UI，从而实现UI的实时更新。提供与用户交互的命令，例如刷新数据、筛选或导出。视图：用户界面视图将是应用程序的主要窗口，它使用DataGrid控件来呈现会话历史。为了提供专业、可定制的界面，我们将特别注意以下几点：禁用自动生成列： 默认情况下，WPF DataGrid的AutoGenerateColumns属性为true，它会根据数据模型的公共属性自动创建列 6。虽然这很方便，但它会导致列标题直接使用属性名称（如“StartupTime”），这不够友好。通过设置AutoGenerateColumns="False"，开发人员可以手动定义列，并为每列指定更具可读性的标题（如“启动时间”）6。数据绑定： DataGrid的ItemsSource属性将通过MVVM绑定到ViewModel的ObservableCollection<BootSession>集合 6。列定义： 每列将使用DataGridTextColumn或其他特定类型的列（例如DataGridTemplateColumn）手动定义，并使用Binding属性将其映射到BootSession类的特定属性 6。5. 实施蓝图：实践步骤和代码示例第1步：项目设置在Visual Studio中创建一个新的WPF应用程序项目，并确保项目面向.NET 9。第2步：数据模型在项目中创建一个名为Models的文件夹，并添加BootSession.cs文件，包含上述BootSession类的代码。第3步：事件日志引擎在项目中创建一个名为Services的文件夹，并实现一个服务类来封装事件日志的读取逻辑。该类将包含一个公共方法，该方法使用EventLogQuery和XPath来检索所有相关的事件并按时间戳排序。第4步：配对逻辑在名为ViewModels的文件夹中创建MainViewModel.cs。该类将包含核心的事件配对算法。它将遍历从事件日志服务获取的排序后的事件列表，并根据表3中的状态机逻辑创建BootSession对象，将它们添加到ObservableCollection<BootSession>中。第5步：用户界面在MainWindow.xaml中，移除默认的Grid布局，并添加DataGrid控件。设置AutoGenerateColumns="False"，并为每个所需的属性手动定义DataGridTextColumn。在MainWindow的后台代码中，将DataContext设置为MainViewModel的实例。XML<Window x:Class="TurnedOnTimesViewWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TurnedOnTimesViewWPF.ViewModels"
+        Title="TurnedOnTimesView Clone" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <Grid>
+        <DataGrid ItemsSource="{Binding BootSessions}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="启动时间" Binding="{Binding StartupTime}" />
+                <DataGridTextColumn Header="关机时间" Binding="{Binding ShutdownTime}" />
+                <DataGridTextColumn Header="持续时间" Binding="{Binding Duration}" />
+                <DataGridTextColumn Header="关机原因" Binding="{Binding ShutdownReason}" />
+                <DataGridTextColumn Header="关机类型" Binding="{Binding ShutdownType}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
+6. 用户体验和未来增强UI/UX建议为了提供专业级的用户体验，建议在UI中实现以下功能：可排序和可调整大小的列： 通过设置DataGrid的CanUserSortColumns和CanUserResizeColumns属性为true，允许用户根据需要对数据进行排序和调整列宽 7。加载进度指示： 在应用程序首次启动并分析大量事件日志时，可能会有短暂的延迟。此时应显示一个加载指示器或进度条，以提供用户反馈。筛选和搜索功能： 允许用户根据时间范围、关机类型或特定关键字对结果进行筛选。建议的未来功能该应用程序的设计应具有可扩展性，以便将来添加以下增强功能：远程计算机分析： System.Diagnostics.Eventing.Reader API原生支持远程计算机事件日志的读取 1。这使得应用程序可以扩展到网络环境，帮助系统管理员监控多台设备。用户登录会话分析： 现有逻辑可以扩展到分析“安全”日志，特别是事件ID 4624（登录）和4647（注销）40。这将提供更全面的系统使用记录，例如，可用于检测未经授权的用户访问。数据导出： 实现将分析结果导出到HTML、XML或CSV等格式的功能，以便于归档或在其他工具中进行进一步分析 2。7. 结论与最终建议本报告提供了一个全面、专家级的蓝图，用于构建一个健壮且高性能的Windows事件日志分析应用程序。通过超越简单的线性数据转储，并采用现代API和基于状态机的算法，本方案直接解决了用户关于数据准确性和清晰度的核心挑战。该应用程序的架构不仅功能完善，而且可扩展、可维护，并能呈现专业的界面。本报告旨在为开发者提供一个完整、详细的指南，指导他们开发一个功能强大且实用的系统工具。
