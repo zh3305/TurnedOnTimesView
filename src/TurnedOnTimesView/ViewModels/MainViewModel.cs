@@ -14,9 +14,12 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using TurnedOnTimesView.Core;
 using TurnedOnTimesView.Infrastructure.Configuration;
+using TurnedOnTimesView.Infrastructure.Exceptions;
 using TurnedOnTimesView.Infrastructure.Logging;
+using TurnedOnTimesView.Infrastructure.Resilience;
 using TurnedOnTimesView.Models;
 using TurnedOnTimesView.Services;
+using TurnedOnTimesView.Views;
 
 namespace TurnedOnTimesView.ViewModels;
 
@@ -27,8 +30,10 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 {
     private readonly IEventLogService _eventLogService;
     private readonly ISessionAnalyzer _sessionAnalyzer;
+    private readonly IDataSourceService _dataSourceService;
     private readonly ILogger<MainViewModel> _logger;
     private readonly AppSettings _appSettings;
+    private readonly IErrorTracker _errorTracker;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly Dispatcher _dispatcher;
     private readonly SemaphoreSlim _loadingSemaphore;
@@ -77,6 +82,22 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _loadingProgress = string.Empty;
 
+    // 数据源选择相关属性
+    [ObservableProperty]
+    private bool _isLocalSystemSelected = true;
+
+    [ObservableProperty]
+    private bool _isEvtxFileSelected;
+
+    [ObservableProperty]
+    private string _evtxFilePath = string.Empty;
+
+    [ObservableProperty]
+    private bool _isEvtxFileValid;
+
+    [ObservableProperty]
+    private bool _isEvtxFileInvalid;
+
     // 集合和视图
     public ObservableCollection<SessionRecord> Sessions { get; }
     public ICollectionView SessionsView { get; }
@@ -84,13 +105,17 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     public MainViewModel(
         IEventLogService eventLogService,
         ISessionAnalyzer sessionAnalyzer,
+        IDataSourceService dataSourceService,
         ILogger<MainViewModel> logger,
-        IOptions<AppSettings> appSettings)
+        IOptions<AppSettings> appSettings,
+        IErrorTracker errorTracker)
     {
         _eventLogService = eventLogService ?? throw new ArgumentNullException(nameof(eventLogService));
         _sessionAnalyzer = sessionAnalyzer ?? throw new ArgumentNullException(nameof(sessionAnalyzer));
+        _dataSourceService = dataSourceService ?? throw new ArgumentNullException(nameof(dataSourceService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _appSettings = appSettings?.Value ?? throw new ArgumentNullException(nameof(appSettings));
+        _errorTracker = errorTracker ?? throw new ArgumentNullException(nameof(errorTracker));
 
         _cancellationTokenSource = new CancellationTokenSource();
         _dispatcher = Dispatcher.CurrentDispatcher;
@@ -110,6 +135,12 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 
         // 订阅属性变化事件
         PropertyChanged += OnPropertyChanged;
+
+        // 订阅数据源变更事件
+        _dataSourceService.DataSourceChanged += OnDataSourceChanged;
+
+        // 初始化数据源状态
+        _ = Task.Run(InitializeDataSourceAsync);
 
         _logger.LogInformation("MainViewModel 已初始化");
     }
@@ -144,6 +175,35 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
                     return;
                 }
                 await LoadSessionsAsync();
+                break;
+
+            case nameof(IsLocalSystemSelected):
+                if (IsLocalSystemSelected)
+                {
+                    IsEvtxFileSelected = false;
+                    UpdateDataSourceState();
+                    await LoadSessionsAsync();
+                }
+                break;
+
+            case nameof(IsEvtxFileSelected):
+                if (IsEvtxFileSelected)
+                {
+                    IsLocalSystemSelected = false;
+                    UpdateDataSourceState();
+                    if (IsEvtxFileValid)
+                    {
+                        await LoadSessionsAsync();
+                    }
+                }
+                break;
+
+            case nameof(EvtxFilePath):
+                ValidateEvtxFile();
+                if (IsEvtxFileSelected && IsEvtxFileValid)
+                {
+                    await LoadSessionsAsync();
+                }
                 break;
         }
     }
@@ -189,30 +249,89 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
             using var _ = _logger.LogOperationTime("加载会话数据");
             _isLoadingCancelled = false;
 
-            // 检查权限
-            if (!_eventLogService.CanAccessEventLog())
+            // 创建并设置当前数据源
+            DataSourceConfiguration dataSource;
+            try
             {
-                StatusMessage = "无法访问事件日志，需要管理员权限";
-                _logger.LogWarning("缺少事件日志访问权限");
+                if (IsLocalSystemSelected)
+                {
+                    dataSource = _dataSourceService.CreateLocalSystemDataSource();
+                }
+                else if (IsEvtxFileSelected)
+                {
+                    if (string.IsNullOrWhiteSpace(EvtxFilePath) || !IsEvtxFileValid)
+                    {
+                        var error = new DataValidationException("未选择有效的.evtx文件", "请选择有效的.evtx文件");
+                        var errorId = _logger.LogAndTrackError(_errorTracker, error, "加载会话数据", "选择数据源");
+                        
+                        await ShowErrorDialogAsync(error);
+                        return;
+                    }
+                    dataSource = await _dataSourceService.CreateExternalEvtxDataSourceAsync(EvtxFilePath);
+                }
+                else
+                {
+                    var error = new DataValidationException("未选择数据来源", "请选择数据来源");
+                    var errorId = _logger.LogAndTrackError(_errorTracker, error, "加载会话数据", "选择数据源");
+                    
+                    await ShowErrorDialogAsync(error);
+                    return;
+                }
+
+                // 验证并设置数据源
+                await _dataSourceService.SetCurrentDataSourceAsync(dataSource, cancellationToken);
+                _logger.LogInformation("成功设置数据源: {DataSourceType}", dataSource.Type);
+            }
+            catch (TurnedOnTimesViewException appEx)
+            {
+                var errorId = _logger.LogAndTrackError(_errorTracker, appEx, "加载会话数据", "设置数据源");
+                
+                await ShowErrorDialogAsync(appEx, async () => await LoadSessionsAsync());
+                return;
+            }
+            catch (Exception ex)
+            {
+                var appException = ErrorMessages.TranslateException(ex, "设置数据源");
+                var errorId = _logger.LogAndTrackError(_errorTracker, appException, "加载会话数据", "设置数据源");
+                
+                await ShowErrorDialogAsync(appException, async () => await LoadSessionsAsync());
                 return;
             }
 
             // 启动进度更新定时器
             StartProgressTimer();
 
-            // 异步获取事件总数（用于进度显示）
-            var totalEventsTask = _eventLogService.GetEventCountAsync(StartDate, EndDate);
-            var totalEvents = await totalEventsTask;
+            // 使用数据源服务获取事件
+            IReadOnlyList<Models.SystemEvent> events;
+            int totalEvents = 0;
             
-            if (_isLoadingCancelled) return;
-            
-            _logger.LogDebug("预计需要处理 {TotalEvents} 个事件", totalEvents);
-            StatusMessage = $"正在读取事件日志... (预计 {totalEvents} 个事件)";
-
-            // 异步获取系统事件
-            var eventsTask = _eventLogService.GetSystemEventsAsync(
-                StartDate, EndDate, _cancellationTokenSource.Token);
-            var events = await eventsTask;
+            try
+            {
+                var eventCount = await _eventLogService.GetEventCountAsync(dataSource, StartDate, EndDate, cancellationToken);
+                totalEvents = (int)Math.Min(eventCount, int.MaxValue);
+                _logger.LogDebug("预计需要处理 {TotalEvents} 个事件", totalEvents);
+                StatusMessage = $"正在读取事件日志... (预计 {totalEvents} 个事件)";
+                
+                events = await _eventLogService.GetSystemEventsAsync(
+                    dataSource, StartDate, EndDate, cancellationToken);
+                    
+                _logger.LogDebug("成功读取到 {ActualEvents} 个事件", events.Count);
+            }
+            catch (TurnedOnTimesViewException appEx)
+            {
+                var errorId = _logger.LogAndTrackError(_errorTracker, appEx, "加载会话数据", "读取事件日志");
+                
+                await ShowErrorDialogAsync(appEx, async () => await LoadSessionsAsync());
+                return;
+            }
+            catch (Exception ex)
+            {
+                var appException = ErrorMessages.TranslateException(ex, "读取事件日志");
+                var errorId = _logger.LogAndTrackError(_errorTracker, appException, "加载会话数据", "读取事件日志");
+                
+                await ShowErrorDialogAsync(appException, async () => await LoadSessionsAsync());
+                return;
+            }
 
             if (_isLoadingCancelled) return;
 
@@ -257,15 +376,18 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
             await UpdateUIAsync(() => StatusMessage = "操作已取消");
             _logger.LogInformation("会话加载操作被取消");
         }
-        catch (UnauthorizedAccessException ex)
+        catch (TurnedOnTimesViewException appEx)
         {
-            StatusMessage = "权限不足，请以管理员身份运行";
-            _logger.LogError(ex, "访问事件日志权限不足");
+            var errorId = _logger.LogAndTrackError(_errorTracker, appEx, "加载会话数据");
+            
+            await ShowErrorDialogAsync(appEx, async () => await LoadSessionsAsync());
         }
         catch (Exception ex)
         {
-            StatusMessage = $"加载失败: {ex.Message}";
-            _logger.LogError(ex, "加载会话数据时发生错误");
+            var appException = ErrorMessages.TranslateException(ex, "加载会话数据");
+            var errorId = _logger.LogAndTrackError(_errorTracker, appException, "加载会话数据");
+            
+            await ShowErrorDialogAsync(appException, async () => await LoadSessionsAsync());
         }
         finally
         {
@@ -325,6 +447,199 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     {
         InitializeDateRange();
         _logger.LogDebug("重置日期范围为默认值");
+    }
+
+    /// <summary>
+    /// 浏览.evtx文件命令
+    /// </summary>
+    [RelayCommand]
+    private void BrowseEvtxFile()
+    {
+        try
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "选择事件日志文件",
+                Filter = "事件日志文件 (*.evtx)|*.evtx|所有文件 (*.*)|*.*",
+                DefaultExt = "evtx",
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Multiselect = false
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                EvtxFilePath = openFileDialog.FileName;
+                _logger.LogInformation("用户选择了.evtx文件: {FilePath}", EvtxFilePath);
+                
+                // 添加到最近使用的文件列表
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _dataSourceService.AddRecentFileAsync(EvtxFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "添加最近使用的文件时发生错误");
+                    }
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            var appException = ErrorMessages.TranslateException(ex, "选择.evtx文件");
+            var errorId = _logger.LogAndTrackError(_errorTracker, appException, "文件管理", "选择文件");
+            
+            StatusMessage = appException.UserMessage;
+        }
+    }
+
+    /// <summary>
+    /// 初始化数据源
+    /// </summary>
+    private async Task InitializeDataSourceAsync()
+    {
+        try
+        {
+            var preferences = await _dataSourceService.GetUserPreferencesAsync();
+            
+            await UpdateUIAsync(() =>
+            {
+                // 根据用户偏好设置默认数据源
+                if (preferences.DefaultDataSourceType == DataSourceType.LocalSystem)
+                {
+                    IsLocalSystemSelected = true;
+                    IsEvtxFileSelected = false;
+                }
+                else if (preferences.DefaultDataSourceType == DataSourceType.ExternalEvtxFile)
+                {
+                    IsEvtxFileSelected = true;
+                    IsLocalSystemSelected = false;
+                    
+                    // 如果有最近使用的文件，设置为默认文件
+                    var recentFiles = preferences.RecentEvtxFiles;
+                    if (recentFiles.Count > 0)
+                    {
+                        EvtxFilePath = recentFiles[0];
+                    }
+                }
+                
+                UpdateDataSourceState();
+            });
+            
+            _logger.LogDebug("数据源初始化完成，默认类型: {DefaultType}", preferences.DefaultDataSourceType);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "初始化数据源时发生错误");
+            await UpdateUIAsync(() =>
+            {
+                IsLocalSystemSelected = true;
+                IsEvtxFileSelected = false;
+                UpdateDataSourceState();
+            });
+        }
+    }
+
+    /// <summary>
+    /// 数据源变更事件处理
+    /// </summary>
+    private async void OnDataSourceChanged(object? sender, DataSourceChangedEventArgs e)
+    {
+        try
+        {
+            _logger.LogInformation("数据源已变更: {OldType} -> {NewType}", 
+                e.OldDataSource?.Type, e.NewDataSource?.Type);
+                
+            await UpdateUIAsync(() => UpdateDataSourceState());
+        }
+        catch (Exception ex)
+        {
+            var appException = ErrorMessages.TranslateException(ex, "处理数据源变更事件");
+            var errorId = _logger.LogAndTrackError(_errorTracker, appException, "数据源管理", "处理变更事件");
+        }
+    }
+
+    /// <summary>
+    /// 更新数据源状态
+    /// </summary>
+    private void UpdateDataSourceState()
+    {
+        if (IsLocalSystemSelected)
+        {
+            StatusMessage = "数据来源：本机系统日志";
+        }
+        else if (IsEvtxFileSelected)
+        {
+            if (string.IsNullOrWhiteSpace(EvtxFilePath))
+            {
+                StatusMessage = "请选择.evtx文件";
+            }
+            else if (IsEvtxFileValid)
+            {
+                StatusMessage = $"数据来源：{System.IO.Path.GetFileName(EvtxFilePath)}";
+            }
+            else
+            {
+                StatusMessage = "所选文件无效或无法访问";
+            }
+        }
+
+        _logger.LogDebug("数据源状态已更新: 本机={IsLocal}, 文件={IsFile}, 路径={Path}", 
+            IsLocalSystemSelected, IsEvtxFileSelected, EvtxFilePath);
+    }
+
+    /// <summary>
+    /// 验证.evtx文件
+    /// </summary>
+    private async void ValidateEvtxFile()
+    {
+        IsEvtxFileValid = false;
+        IsEvtxFileInvalid = false;
+
+        if (string.IsNullOrWhiteSpace(EvtxFilePath))
+        {
+            return;
+        }
+
+        try
+        {
+            // 使用DataSourceService创建并验证数据源
+            var dataSource = await _dataSourceService.CreateExternalEvtxDataSourceAsync(EvtxFilePath);
+            var validationResult = await _dataSourceService.ValidateDataSourceAsync(dataSource);
+            
+            if (validationResult.IsValid)
+            {
+                IsEvtxFileValid = true;
+                var sizeText = validationResult.PerformanceInfo?.DataSizeBytes > 0 
+                    ? $" ({validationResult.PerformanceInfo.DataSizeBytes / (1024 * 1024.0):F1}MB)"
+                    : "";
+                
+                StatusMessage = $"文件有效{sizeText}";
+                
+                if (validationResult.Warnings.Count > 0)
+                {
+                    StatusMessage += $" - {string.Join(", ", validationResult.Warnings)}";
+                }
+
+                _logger.LogInformation("成功验证.evtx文件: {FilePath}", EvtxFilePath);
+            }
+            else
+            {
+                IsEvtxFileInvalid = true;
+                StatusMessage = validationResult.ErrorMessage;
+                _logger.LogWarning("验证.evtx文件失败: {Error}", validationResult.ErrorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            IsEvtxFileInvalid = true;
+            StatusMessage = $"验证文件时出错: {ex.Message}";
+            _logger.LogError(ex, "验证.evtx文件时发生错误: {FilePath}", EvtxFilePath);
+        }
+
+        UpdateDataSourceState();
     }
 
     /// <summary>
@@ -615,12 +930,44 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         // 比如从事件服务获取实时进度信息
     }
 
+    /// <summary>
+    /// 显示错误对话框
+    /// </summary>
+    /// <param name="exception">异常信息</param>
+    /// <param name="retryAction">重试操作（可选）</param>
+    private async Task ShowErrorDialogAsync(TurnedOnTimesViewException exception, Func<Task>? retryAction = null)
+    {
+        await UpdateUIAsync(async () =>
+        {
+            try
+            {
+                var mainWindow = System.Windows.Application.Current.MainWindow;
+                var shouldRetry = await ErrorDialogService.ShowErrorAsync(mainWindow, exception, retryAction, _logger);
+                
+                if (shouldRetry && retryAction != null)
+                {
+                    _logger.LogInformation("用户选择重试操作: {ErrorCode}", exception.ErrorCode);
+                    // 重试操作将在ErrorDialogService中执行
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "显示错误对话框时发生错误");
+                // 降级到简单状态消息
+                StatusMessage = exception.UserMessage;
+            }
+        });
+    }
+
     public void Dispose()
     {
         try
         {
             _isLoadingCancelled = true;
             _cancellationTokenSource?.Cancel();
+            
+            // 取消数据源服务事件订阅
+            _dataSourceService.DataSourceChanged -= OnDataSourceChanged;
             
             StopProgressTimer();
             _cancellationTokenSource?.Dispose();

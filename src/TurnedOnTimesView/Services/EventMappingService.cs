@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
@@ -475,5 +476,132 @@ public sealed class EventMappingService
         }
 
         return "内核电源事件";
+    }
+
+    /// <summary>
+    /// 将EventRecord映射为SystemEvent
+    /// </summary>
+    /// <param name="eventRecord">Windows事件记录</param>
+    /// <returns>系统事件对象，如果不是目标事件则返回null</returns>
+    public SystemEvent? MapEventRecord(EventRecord eventRecord)
+    {
+        if (eventRecord == null)
+            return null;
+
+        var eventId = eventRecord.Id;
+        
+        // 只处理我们关注的事件类型
+        if (!IsSupportedEventId(eventId))
+            return null;
+
+        try
+        {
+            var shutdownType = GetShutdownType(eventId);
+            var message = eventRecord.FormatDescription() ?? string.Empty;
+            var source = eventRecord.ProviderName ?? string.Empty;
+            
+            // 提取进程信息和关机原因
+            var processInfo = ExtractProcessInfo(message);
+            var shutdownReason = ExtractShutdownReason(message);
+            var reasonDescription = GetShutdownReasonDescription(shutdownReason);
+            var detailedDescription = GetDetailedEventDescription(eventId, message);
+
+            return new SystemEvent
+            {
+                EventId = eventId,
+                TimeGenerated = eventRecord.TimeCreated?.ToLocalTime() ?? DateTime.Now,
+                Source = source,
+                Message = message,
+                Level = eventRecord.LevelDisplayName ?? "信息",
+                RecordId = eventRecord.RecordId ?? 0,
+                UserSid = eventRecord.UserId?.Value,
+                ProcessInfo = processInfo,
+                ShutdownReason = shutdownReason,
+                ShutdownType = shutdownType,
+                ShutdownReasonDescription = reasonDescription,
+                DetailedDescription = detailedDescription
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "映射事件记录失败: EventId={EventId}, RecordId={RecordId}",
+                eventId, eventRecord.RecordId);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 从事件消息中提取进程信息
+    /// </summary>
+    /// <param name="message">事件消息</param>
+    /// <returns>进程信息</returns>
+    private static string ExtractProcessInfo(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return string.Empty;
+
+        // 尝试匹配不同格式的进程信息
+        var patterns = new[]
+        {
+            @"进程\s+([^\s\)]+)",
+            @"Process\s+([^\s\)]+)",
+            @"应用程序\s+([^\s\)]+)",
+            @"Application\s+([^\s\)]+)"
+        };
+
+        foreach (var pattern in patterns)
+        {
+            var match = Regex.Match(message, pattern, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                return match.Groups[1].Value.Trim();
+            }
+        }
+
+        return "系统";
+    }
+
+    /// <summary>
+    /// 从事件消息中提取关机原因
+    /// </summary>
+    /// <param name="message">事件消息</param>
+    /// <returns>关机原因</returns>
+    private static string ExtractShutdownReason(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return string.Empty;
+
+        // 尝试提取十六进制的关机原因代码
+        var hexMatch = Regex.Match(message, @"0x[0-9a-fA-F]{8}");
+        if (hexMatch.Success)
+        {
+            return hexMatch.Value;
+        }
+
+        // 尝试提取SHTDN_REASON常量
+        var reasonMatch = Regex.Match(message, @"SHTDN_REASON_[A-Z_]+");
+        if (reasonMatch.Success)
+        {
+            return reasonMatch.Value;
+        }
+
+        // 查找包含原因的关键词
+        var keywords = new[] { "原因", "reason", "因为", "due to", "caused by" };
+        foreach (var keyword in keywords)
+        {
+            var keywordIndex = message.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+            if (keywordIndex >= 0)
+            {
+                var remainingText = message.Substring(keywordIndex);
+                // 提取关键词后的部分，但限制长度
+                var endMatch = Regex.Match(remainingText, @"^[^。！？\n]{1,100}");
+                if (endMatch.Success)
+                {
+                    return endMatch.Value.Trim();
+                }
+            }
+        }
+
+        return "未指定";
     }
 }

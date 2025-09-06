@@ -157,20 +157,183 @@
                                   Opacity="0.1" Color="Black"/>
             </Border.Effect>
             <Grid Margin="20,15">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 
-                <!-- 左侧筛选控件 -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
-                        <TextBlock Text="开始日期:" VerticalAlignment="Center" 
-                                   Margin="0,0,8,0" FontWeight="500" Foreground="#666"/>
-                        <DatePicker SelectedDate="{Binding StartDate}" Width="130" Height="30"
-                                    BorderBrush="#ddd" BorderThickness="1"/>
+                <!-- 数据源选择区域 -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- 数据源选择控件 -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="数据来源:" VerticalAlignment="Center" 
+                                   Margin="0,0,12,0" FontWeight="600" Foreground="#495057" FontSize="14"/>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                            <RadioButton Name="LocalSystemRadio" Content="本机系统日志" 
+                                         IsChecked="{Binding IsLocalSystemSelected}"
+                                         GroupName="DataSource" 
+                                         VerticalAlignment="Center" 
+                                         Margin="0,0,15,0" FontWeight="500" 
+                                         Foreground="#495057" FontSize="13">
+                                <RadioButton.Style>
+                                    <Style TargetType="RadioButton">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="RadioButton">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="16" Height="16" 
+                                                                CornerRadius="8" 
+                                                                BorderBrush="#667eea" 
+                                                                BorderThickness="2"
+                                                                Background="{TemplateBinding Background}"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,6,0">
+                                                            <Ellipse Width="6" Height="6"
+                                                                     Fill="#667eea"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     Visibility="{TemplateBinding IsChecked, 
+                                                                                Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                        </Border>
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="#667eea"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </RadioButton.Style>
+                            </RadioButton>
+                            
+                            <RadioButton Name="EvtxFileRadio" Content="外部.evtx文件" 
+                                         IsChecked="{Binding IsEvtxFileSelected}"
+                                         GroupName="DataSource" 
+                                         VerticalAlignment="Center" 
+                                         FontWeight="500" 
+                                         Foreground="#495057" FontSize="13">
+                                <RadioButton.Style>
+                                    <Style TargetType="RadioButton">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="RadioButton">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="16" Height="16" 
+                                                                CornerRadius="8" 
+                                                                BorderBrush="#667eea" 
+                                                                BorderThickness="2"
+                                                                Background="{TemplateBinding Background}"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,6,0">
+                                                            <Ellipse Width="6" Height="6"
+                                                                     Fill="#667eea"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     Visibility="{TemplateBinding IsChecked, 
+                                                                                Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                        </Border>
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="#667eea"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </RadioButton.Style>
+                            </RadioButton>
+                        </StackPanel>
                     </StackPanel>
+                    
+                    <!-- 文件选择区域（仅在选择.evtx文件时显示） -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                                Visibility="{Binding IsEvtxFileSelected, 
+                                           Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Margin="20,0,0,0">
+                        <TextBlock Text="文件路径:" VerticalAlignment="Center" 
+                                   Margin="0,0,8,0" FontWeight="500" Foreground="#666"/>
+                        <TextBox Text="{Binding EvtxFilePath, UpdateSourceTrigger=PropertyChanged}" 
+                                 Width="350" Height="30" VerticalContentAlignment="Center"
+                                 BorderBrush="#ddd" BorderThickness="1"
+                                 Padding="8,0" AllowDrop="True"/>
+                        <Button Content="浏览..." Command="{Binding BrowseEvtxFileCommand}" 
+                                Margin="8,0,0,0" Padding="12,6" Height="30"
+                                Background="#667eea" Foreground="White" 
+                                BorderBrush="#667eea" BorderThickness="0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                        CornerRadius="5">
+                                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#5a67d8"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                    
+                    <!-- 文件状态指示器 -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                                Visibility="{Binding IsEvtxFileSelected, 
+                                           Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Border Background="#c6f6d5" CornerRadius="12" Padding="8,4"
+                                Visibility="{Binding IsEvtxFileValid, 
+                                           Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="✓ 文件有效" FontSize="12" FontWeight="500" 
+                                       Foreground="#22543d"/>
+                        </Border>
+                        <Border Background="#fed7d7" CornerRadius="12" Padding="8,4"
+                                Visibility="{Binding IsEvtxFileInvalid, 
+                                           Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="✗ 文件无效" FontSize="12" FontWeight="500" 
+                                       Foreground="#742a2a"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+                
+                <!-- 传统筛选控件区域 -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- 左侧筛选控件 -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                            <TextBlock Text="开始日期:" VerticalAlignment="Center" 
+                                       Margin="0,0,8,0" FontWeight="500" Foreground="#666"/>
+                            <DatePicker SelectedDate="{Binding StartDate}" Width="130" Height="30"
+                                        BorderBrush="#ddd" BorderThickness="1"/>
+                        </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
                         <TextBlock Text="结束日期:" VerticalAlignment="Center" 
@@ -191,47 +354,47 @@
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
-                
-                <!-- 中间搜索区域 -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" 
-                            VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="搜索:" VerticalAlignment="Center" 
-                               Margin="0,0,8,0" FontWeight="500" Foreground="#666"/>
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                             Width="250" Height="30" VerticalContentAlignment="Center"
-                             BorderBrush="#ddd" BorderThickness="1"
-                             Padding="8,0"/>
-                    <Button Content="清除" Command="{Binding ClearSearchCommand}" 
-                            Margin="8,0,0,0" Padding="12,6" Height="30"
-                            Background="#f8f9fa" Foreground="#495057" 
-                            BorderBrush="#dee2e6" BorderThickness="1">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                                    CornerRadius="5">
-                                                <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#e9ecef"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </StackPanel>
-                
-                <!-- 右侧操作按钮 -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    
+                    <!-- 中间搜索区域 -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" 
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="搜索:" VerticalAlignment="Center" 
+                                   Margin="0,0,8,0" FontWeight="500" Foreground="#666"/>
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                 Width="250" Height="30" VerticalContentAlignment="Center"
+                                 BorderBrush="#ddd" BorderThickness="1"
+                                 Padding="8,0"/>
+                        <Button Content="清除" Command="{Binding ClearSearchCommand}" 
+                                Margin="8,0,0,0" Padding="12,6" Height="30"
+                                Background="#f8f9fa" Foreground="#495057" 
+                                BorderBrush="#dee2e6" BorderThickness="1">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                        CornerRadius="5">
+                                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#e9ecef"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                    
+                    <!-- 右侧操作按钮 -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Content="刷新" Command="{Binding RefreshCommand}" 
                             Margin="0,0,8,0" Padding="15,6" Height="30"
                             Background="#48bb78" Foreground="White" 
@@ -316,6 +479,7 @@
                         </Button.Style>
                     </Button>
                 </StackPanel>
+                </Grid>
             </Grid>
         </Border>
 

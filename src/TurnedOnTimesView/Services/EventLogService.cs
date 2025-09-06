@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text.RegularExpressions;
@@ -12,6 +13,8 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using TurnedOnTimesView.Infrastructure.Exceptions;
+using TurnedOnTimesView.Infrastructure.Resilience;
 using TurnedOnTimesView.Models;
 
 namespace TurnedOnTimesView.Services;
@@ -26,6 +29,8 @@ public sealed class EventLogService : IEventLogService, IDisposable
     private readonly EventMappingService _eventMappingService;
     private readonly ArrayPool<SystemEvent> _eventPool;
     private readonly ConcurrentDictionary<string, EventLogReader> _readerCache;
+    private readonly RetryPolicy _fileRetryPolicy;
+    private readonly RetryPolicy _systemRetryPolicy;
     
     // 关键事件ID常量 - 扩展支持更多事件类型
     private static readonly int[] TargetEventIds = { 
@@ -82,6 +87,10 @@ public sealed class EventLogService : IEventLogService, IDisposable
         _eventMappingService = eventMappingService ?? throw new ArgumentNullException(nameof(eventMappingService));
         _eventPool = ArrayPool<SystemEvent>.Shared;
         _readerCache = new ConcurrentDictionary<string, EventLogReader>();
+        
+        // 初始化重试策略
+        _fileRetryPolicy = RetryPolicies.FileOperations(_logger);
+        _systemRetryPolicy = RetryPolicies.SystemServices(_logger);
     }
 
     /// <inheritdoc />
@@ -90,6 +99,14 @@ public sealed class EventLogService : IEventLogService, IDisposable
         DateTime endDate, 
         CancellationToken cancellationToken = default)
     {
+        // 验证输入参数
+        var dateValidation = ErrorMessages.ValidateDateRange(startDate, endDate);
+        if (dateValidation != null)
+        {
+            _logger.LogWarning("日期范围验证失败: {Errors}", string.Join(", ", dateValidation.ValidationErrors));
+            throw dateValidation;
+        }
+        
         _logger.LogInformation("开始获取系统事件，时间范围: {StartDate} - {EndDate}", 
             startDate.ToString("yyyy-MM-dd HH:mm:ss"), 
             endDate.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -97,7 +114,9 @@ public sealed class EventLogService : IEventLogService, IDisposable
         if (!CanAccessEventLog())
         {
             _logger.LogError("没有访问事件日志的权限");
-            throw new UnauthorizedAccessException("需要管理员权限才能访问Windows事件日志");
+            throw new InsufficientPermissionException(
+                "管理员权限", 
+                ErrorMessages.GetUserMessage("ADMIN_RIGHTS_REQUIRED"));
         }
 
         var events = new List<SystemEvent>();
@@ -116,7 +135,12 @@ public sealed class EventLogService : IEventLogService, IDisposable
 
         try
         {
-            events = await ProcessEventsWithChannelAsync(xpath, cancellationToken);
+            events = await _systemRetryPolicy.ExecuteAsync(async ct =>
+            {
+                return await ProcessEventsWithChannelAsync(xpath, ct);
+            }, 
+            exception => exception is EventLogException or TimeoutException,
+            cancellationToken);
             
             // 缓存结果（指定缓存大小）
             var cacheOptions = new MemoryCacheEntryOptions
@@ -128,15 +152,42 @@ public sealed class EventLogService : IEventLogService, IDisposable
             
             _logger.LogInformation("事件查询完成，共获取 {Count} 个有效事件", events.Count);
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("获取系统事件操作被取消");
+            throw new OperationCancelledException("获取系统事件", "操作被用户取消");
+        }
         catch (EventLogException ex)
         {
             _logger.LogError(ex, "访问事件日志时发生错误");
-            throw new InvalidOperationException("无法访问Windows事件日志", ex);
+            throw new EventLogServiceException(
+                "EVENTLOG_ACCESS_ERROR", 
+                ErrorMessages.GetUserMessage("EVENTLOG_SERVICE_UNAVAILABLE"),
+                ex.Message, ex);
         }
         catch (SecurityException ex)
         {
             _logger.LogError(ex, "访问事件日志权限不足");
-            throw new UnauthorizedAccessException("需要管理员权限才能访问Windows事件日志", ex);
+            throw new InsufficientPermissionException(
+                "事件日志访问权限",
+                ErrorMessages.GetUserMessage("EVENTLOG_ACCESS_DENIED"), ex);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogError(ex, "访问事件日志权限不足");
+            throw new InsufficientPermissionException(
+                "管理员权限",
+                ErrorMessages.GetUserMessage("ADMIN_RIGHTS_REQUIRED"), ex);
+        }
+        catch (TurnedOnTimesViewException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            var appException = ErrorMessages.TranslateException(ex, "获取系统事件");
+            _logger.LogError(ex, "获取系统事件失败: {Error}", appException.UserMessage);
+            throw appException;
         }
 
         // 按时间排序并返回只读列表
@@ -400,6 +451,426 @@ public sealed class EventLogService : IEventLogService, IDisposable
         await Task.WhenAll(new[] { producerTask }.Concat(consumerTasks));
         
         return events.ToList();
+    }
+
+    /// <summary>
+    /// 从.evtx文件异步获取指定时间范围内的系统事件
+    /// </summary>
+    public async Task<IReadOnlyList<SystemEvent>> GetSystemEventsFromFileAsync(
+        string evtxFilePath, 
+        DateTime startDate, 
+        DateTime endDate, 
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(evtxFilePath))
+        {
+            throw new DataValidationException("文件路径不能为空", ErrorMessages.GetUserMessage("INVALID_FILE_PATH"));
+        }
+
+        if (!System.IO.File.Exists(evtxFilePath))
+        {
+            throw new FileAccessException(evtxFilePath, 
+                ErrorMessages.GetUserMessage("FILE_NOT_FOUND"),
+                $"找不到文件: {evtxFilePath}");
+        }
+        
+        // 验证日期范围
+        var dateValidation = ErrorMessages.ValidateDateRange(startDate, endDate);
+        if (dateValidation != null)
+        {
+            _logger.LogWarning("日期范围验证失败: {Errors}", string.Join(", ", dateValidation.ValidationErrors));
+            throw dateValidation;
+        }
+        
+        // 检查文件大小
+        var fileInfo = new FileInfo(evtxFilePath);
+        var sizeCheck = ErrorMessages.CheckFileSize(evtxFilePath, fileInfo.Length);
+        if (sizeCheck != null && sizeCheck.Severity == ErrorSeverity.Error)
+        {
+            throw sizeCheck;
+        }
+
+        _logger.LogInformation("开始从.evtx文件读取事件: {FilePath}, 时间范围: {StartDate} - {EndDate}", 
+            evtxFilePath, startDate, endDate);
+
+        var events = new ConcurrentBag<SystemEvent>();
+        
+        try
+        {
+            return await _fileRetryPolicy.ExecuteWithProgressAsync(async (progress, ct) =>
+            {
+                // 构建XPath查询以筛选目标事件ID和时间范围
+                var eventIdFilter = string.Join(" or ", TargetEventIds.Select(id => $"EventID={id}"));
+                var timeCreatedFilter = $"TimeCreated[@SystemTime>='{startDate:yyyy-MM-ddTHH:mm:ss.000Z}' and @SystemTime<='{endDate:yyyy-MM-ddTHH:mm:ss.000Z}']";
+                var query = $"*[System[({eventIdFilter}) and {timeCreatedFilter}]]";
+                
+                _logger.LogDebug("使用XPath查询: {Query}", query);
+                
+                progress?.Report(new OperationProgress
+                {
+                    CurrentStep = "初始化文件读取器",
+                    PercentComplete = 0
+                });
+
+                return await Task.Run(() =>
+                {
+                    try
+                    {
+                        using var reader = new EventLogReader(evtxFilePath, PathType.FilePath);
+                        
+                        EventRecord? eventRecord;
+                        var eventCount = 0;
+                        var totalProcessed = 0;
+                        
+                        progress?.Report(new OperationProgress
+                        {
+                            CurrentStep = "读取事件记录",
+                            PercentComplete = 5
+                        });
+                        
+                        while ((eventRecord = reader.ReadEvent()) != null)
+                        {
+                            ct.ThrowIfCancellationRequested();
+                            
+                            using (eventRecord)
+                            {
+                                totalProcessed++;
+                                
+                                try
+                                {
+                                    // 手动过滤事件ID和时间范围
+                                    if (!TargetEventIds.Contains(eventRecord.Id))
+                                        continue;
+                                        
+                                    var eventTime = eventRecord.TimeCreated?.ToLocalTime();
+                                    if (!eventTime.HasValue || eventTime < startDate || eventTime > endDate)
+                                        continue;
+
+                                    var systemEvent = _eventMappingService.MapEventRecord(eventRecord);
+                                    if (systemEvent != null)
+                                    {
+                                        events.Add(systemEvent);
+                                        eventCount++;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "处理事件记录时发生错误: EventID={EventId}, Time={Time}",
+                                        eventRecord.Id, eventRecord.TimeCreated);
+                                }
+                                
+                                // 每处理500个事件更新一次进度
+                                if (totalProcessed % 500 == 0)
+                                {
+                                    progress?.Report(new OperationProgress
+                                    {
+                                        CurrentStep = $"已处理 {totalProcessed} 个记录，找到 {eventCount} 个目标事件",
+                                        ItemsProcessed = totalProcessed,
+                                        AdditionalInfo = $"文件: {Path.GetFileName(evtxFilePath)}"
+                                    });
+                                }
+                            }
+                        }
+                        
+                        progress?.Report(new OperationProgress
+                        {
+                            CurrentStep = "读取完成",
+                            PercentComplete = 90,
+                            ItemsProcessed = totalProcessed,
+                            TotalItems = totalProcessed
+                        });
+                        
+                        _logger.LogInformation("从.evtx文件读取完成，共处理 {TotalProcessed} 个记录，找到 {EventCount} 个目标事件", 
+                            totalProcessed, eventCount);
+                        
+                        return events.OrderBy(e => e.TimeGenerated).ToList();
+                    }
+                    catch (EventLogException ex)
+                    {
+                        throw new FileFormatException(evtxFilePath, ".evtx", 
+                            ErrorMessages.GetUserMessage("FILE_FORMAT_ERROR"), ex);
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        throw new FileAccessException(evtxFilePath, 
+                            ErrorMessages.GetUserMessage("FILE_PERMISSION_DENIED"),
+                            ex.Message, ex);
+                    }
+                }, ct);
+            }, 
+            null, // 使用默认进度回调
+            exception => exception is not (OperationCanceledException or ArgumentException or NotSupportedException),
+            cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("从.evtx文件读取事件被取消: {FilePath}", evtxFilePath);
+            throw new OperationCancelledException("读取.evtx文件", "操作被用户取消");
+        }
+        catch (TurnedOnTimesViewException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            var appException = ErrorMessages.TranslateException(ex, evtxFilePath);
+            _logger.LogError(ex, "从.evtx文件读取事件失败: {FilePath} - {Error}", 
+                evtxFilePath, appException.UserMessage);
+            throw appException;
+        }
+
+        var result = events.OrderBy(e => e.TimeGenerated).ToList();
+        _logger.LogInformation("成功从.evtx文件获取 {EventCount} 个系统事件", result.Count);
+        
+        return result;
+    }
+
+    /// <summary>
+    /// 验证.evtx文件是否可以正常读取
+    /// </summary>
+    public bool CanReadEvtxFile(string evtxFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(evtxFilePath))
+            return false;
+
+        try
+        {
+            if (!System.IO.File.Exists(evtxFilePath))
+                return false;
+
+            // 尝试创建EventLogReader来测试文件是否可读
+            using var reader = new EventLogReader(evtxFilePath, PathType.FilePath);
+            
+            // 尝试读取一个事件来验证文件格式
+            using var testEvent = reader.ReadEvent();
+            
+            _logger.LogDebug("成功验证.evtx文件: {FilePath}", evtxFilePath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "验证.evtx文件时发生错误: {FilePath}", evtxFilePath);
+            return false;
+        }
+    }
+    
+    /// <inheritdoc />
+    public async Task<FileValidationResult> ValidateEvtxFileAsync(string evtxFilePath, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(evtxFilePath))
+            return FileValidationResult.Failure("文件路径不能为空");
+            
+        try
+        {
+            var fileInfo = new FileInfo(evtxFilePath);
+            if (!fileInfo.Exists)
+                return FileValidationResult.Failure($"文件不存在: {evtxFilePath}");
+                
+            // 检查文件扩展名
+            if (!string.Equals(fileInfo.Extension, ".evtx", StringComparison.OrdinalIgnoreCase))
+                return FileValidationResult.Failure($"不支持的文件格式: {fileInfo.Extension}，仅支持.evtx文件");
+            
+            _logger.LogDebug("开始详细验证.evtx文件: {FilePath}", evtxFilePath);
+            
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using var reader = new EventLogReader(evtxFilePath, PathType.FilePath);
+                    
+                    // 尝试读取第一个和最后一个事件来确定时间范围
+                    DateTime? firstEventTime = null;
+                    DateTime? lastEventTime = null;
+                    long eventCount = 0;
+                    
+                    // 读取前100个事件来获取基本信息
+                    const int sampleSize = 100;
+                    var sampleCount = 0;
+                    
+                    while (sampleCount < sampleSize && reader.ReadEvent() is EventRecord eventRecord)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        
+                        using (eventRecord)
+                        {
+                            var eventTime = eventRecord.TimeCreated?.ToLocalTime();
+                            if (eventTime.HasValue)
+                            {
+                                firstEventTime ??= eventTime;
+                                lastEventTime = eventTime; // 持续更新最后时间
+                            }
+                            
+                            // 只计算我们感兴趣的事件
+                            if (TargetEventIds.Contains(eventRecord.Id))
+                            {
+                                eventCount++;
+                            }
+                            
+                            sampleCount++;
+                        }
+                    }
+                    
+                    // 基于样本估算总事件数
+                    var estimatedTotalEvents = sampleCount > 0 ? (eventCount * fileInfo.Length) / (sampleCount * 1000) : 0;
+                    
+                    DateTimeRange? timeRange = null;
+                    if (firstEventTime.HasValue && lastEventTime.HasValue)
+                    {
+                        timeRange = new DateTimeRange(firstEventTime.Value, lastEventTime.Value);
+                    }
+                    
+                    _logger.LogDebug("文件验证完成: {FilePath}, 估算事件数: {EventCount}, 时间范围: {TimeRange}", 
+                        evtxFilePath, estimatedTotalEvents, timeRange);
+                    
+                    return FileValidationResult.Success(fileInfo, estimatedTotalEvents, timeRange);
+                }
+                catch (EventLogException ex)
+                {
+                    _logger.LogError(ex, "验证.evtx文件时发生事件日志错误: {FilePath}", evtxFilePath);
+                    return FileValidationResult.Failure($"无效的.evtx文件格式: {ex.Message}");
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    _logger.LogError(ex, "验证.evtx文件时权限不足: {FilePath}", evtxFilePath);
+                    return FileValidationResult.Failure($"访问文件权限不足: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "验证.evtx文件时发生未知错误: {FilePath}", evtxFilePath);
+                    return FileValidationResult.Failure($"验证文件时发生错误: {ex.Message}");
+                }
+            }, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("文件验证被取消: {FilePath}", evtxFilePath);
+            return FileValidationResult.Failure("操作被取消");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "文件验证预处理失败: {FilePath}", evtxFilePath);
+            return FileValidationResult.Failure($"文件验证失败: {ex.Message}");
+        }
+    }
+    
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<SystemEvent>> GetSystemEventsAsync(
+        DataSourceConfiguration dataSource,
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken = default)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource));
+            
+        _logger.LogInformation("从数据源获取系统事件: {Type} - {DisplayName}, 时间范围: {StartDate} - {EndDate}",
+            dataSource.Type, dataSource.DisplayName, startDate, endDate);
+        
+        return dataSource switch
+        {
+            LocalSystemDataSource => await GetSystemEventsAsync(startDate, endDate, cancellationToken),
+            ExternalEvtxDataSource evtxSource => await GetSystemEventsFromFileAsync(
+                evtxSource.FilePath, startDate, endDate, cancellationToken),
+            _ => throw new NotSupportedException($"不支持的数据源类型: {dataSource.Type}")
+        };
+    }
+    
+    /// <inheritdoc />
+    public async Task<long> GetEventCountAsync(
+        DataSourceConfiguration dataSource,
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken = default)
+    {
+        if (dataSource == null)
+            throw new ArgumentNullException(nameof(dataSource));
+            
+        _logger.LogDebug("获取数据源事件计数: {Type} - {DisplayName}", dataSource.Type, dataSource.DisplayName);
+        
+        return dataSource switch
+        {
+            LocalSystemDataSource => await GetEventCountAsync(startDate, endDate),
+            ExternalEvtxDataSource evtxSource => await GetEventCountFromFileAsync(
+                evtxSource.FilePath, startDate, endDate, cancellationToken),
+            _ => throw new NotSupportedException($"不支持的数据源类型: {dataSource.Type}")
+        };
+    }
+    
+    /// <summary>
+    /// 从.evtx文件获取事件计数
+    /// </summary>
+    private async Task<long> GetEventCountFromFileAsync(
+        string evtxFilePath, 
+        DateTime startDate, 
+        DateTime endDate,
+        CancellationToken cancellationToken)
+    {
+        if (!File.Exists(evtxFilePath))
+            return 0;
+        
+        // 检查缓存
+        var cacheKey = $"file_count_{Path.GetFileName(evtxFilePath)}_{startDate:yyyyMMddHHmmss}_{endDate:yyyyMMddHHmmss}";
+        if (_cache.TryGetValue(cacheKey, out long cachedCount))
+        {
+            return cachedCount;
+        }
+        
+        var count = await Task.Run(() =>
+        {
+            try
+            {
+                using var reader = new EventLogReader(evtxFilePath, PathType.FilePath);
+                
+                long eventCount = 0;
+                const int batchSize = 1000;
+                
+                while (reader.ReadEvent() is EventRecord eventRecord)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    
+                    using (eventRecord)
+                    {
+                        // 过滤事件ID和时间范围
+                        if (!TargetEventIds.Contains(eventRecord.Id))
+                            continue;
+                            
+                        var eventTime = eventRecord.TimeCreated?.ToLocalTime();
+                        if (!eventTime.HasValue || eventTime < startDate || eventTime > endDate)
+                            continue;
+                        
+                        eventCount++;
+                        
+                        // 定期检查取消请求
+                        if (eventCount % batchSize == 0)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                    }
+                }
+                
+                return eventCount;
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("文件事件计数被取消: {FilePath}", evtxFilePath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "获取文件事件计数时发生错误: {FilePath}", evtxFilePath);
+                return 0L;
+            }
+        }, cancellationToken);
+        
+        // 缓存结果
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(CacheExpirationMinutes),
+            Size = 1
+        };
+        _cache.Set(cacheKey, count, cacheOptions);
+        
+        return count;
     }
 
     public void Dispose()

@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<EventMappingService>();
         services.AddScoped<IEventLogService, EventLogService>();
         services.AddScoped<ISessionAnalyzer, SessionAnalyzer>();
+        services.AddSingleton<IDataSourceService, DataSourceService>();
 
         // 注册 ViewModels
         services.AddTransient<MainViewModel>();
@@ -139,6 +140,15 @@ public static class ServiceProviderExtensions
         catch (Exception ex)
         {
             errors.Add($"SessionAnalyzer 创建失败: {ex.Message}");
+        }
+
+        try
+        {
+            serviceProvider.GetRequiredService<IDataSourceService>();
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"DataSourceService 创建失败: {ex.Message}");
         }
 
         try
