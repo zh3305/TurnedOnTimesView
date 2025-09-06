@@ -1,0 +1,980 @@
+H:\Code_Poject\TurnedOnTimesView\src\TurnedOnTimesView\TurnedOnTimesView.csproj : warning NU1903: 包 "Microsoft.Extensions.Caching.Memory" 9.0.0-preview.7.24405.7 具有已知的 高 严重性漏洞，https://github.com/advisories/GHSA-qj66-m88j-hmgj [H:\Code_Poject\TurnedOnTimesView\src\RecordExtractor\RecordExtractor.csproj]
+H:\Code_Poject\TurnedOnTimesView\src\TurnedOnTimesView\TurnedOnTimesView.csproj : warning NU1903: 包 "Microsoft.Extensions.Caching.Memory" 9.0.0-preview.7.24405.7 具有已知的 高 严重性漏洞，https://github.com/advisories/GHSA-qj66-m88j-hmgj
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: H:\Code_Poject\TurnedOnTimesView\src\RecordExtractor
+info: TurnedOnTimesView.Services.EventLogService[0]
+      开始获取系统事件，时间范围: 2025-04-09 13:23:17 - 2025-09-06 13:23:17
+info: TurnedOnTimesView.Services.EventLogService[0]
+      事件查询完成，共获取 455 个有效事件
+info: TurnedOnTimesView.Services.EventLogService[0]
+      成功获取并排序了 455 个系统事件
+info: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始分析 455 个系统事件
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始执行操作: 会话分析
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      事件序列存在警告: 启动事件 (111) 和关机事件 (214) 数量差异较大, 发现 6 个异常事件
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始优化处理 455 个事件
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/14/2025 01:27:43
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 01:27:43 - 05/14/2025 01:31:43, 类型: Normal, 持续时间: 00:04:00.3815095
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/14/2025 01:31:43
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 00:31:43 - 05/14/2025 01:31:43, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/14/2025 01:32:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 01:32:21 - 05/14/2025 01:50:10, 类型: Normal, 持续时间: 00:17:48.5049395
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/14/2025 01:50:27
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 00:50:27 - 05/14/2025 01:50:27, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/14/2025 08:48:59
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 08:48:59 - 05/15/2025 00:06:50, 类型: Normal, 持续时间: 15:17:51.2635870
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/15/2025 00:07:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/14/2025 23:07:00 - 05/15/2025 00:07:00, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/15/2025 07:55:58
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/15/2025 07:55:58 - 05/16/2025 02:32:40, 类型: Normal, 持续时间: 18:36:42.5750238
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/16/2025 02:32:48
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/16/2025 01:32:48 - 05/16/2025 02:32:48, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/16/2025 07:49:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/16/2025 07:49:17 - 05/17/2025 00:11:32, 类型: Normal, 持续时间: 16:22:14.6969581
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/17/2025 00:11:46
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/16/2025 23:11:46 - 05/17/2025 00:11:46, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/18/2025 12:37:39
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/18/2025 12:37:39 - 05/18/2025 15:05:44, 类型: Normal, 持续时间: 02:28:04.2953768
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/18/2025 15:06:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/18/2025 14:06:52 - 05/18/2025 15:06:52, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/18/2025 15:07:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/18/2025 15:07:44 - 05/18/2025 21:17:26, 类型: Normal, 持续时间: 06:09:41.3195255
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/18/2025 21:17:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/18/2025 20:17:34 - 05/18/2025 21:17:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/19/2025 19:17:27
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/19/2025 19:17:27 - 05/20/2025 01:23:06, 类型: Normal, 持续时间: 06:05:39.1898840
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/20/2025 01:23:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/20/2025 00:23:11 - 05/20/2025 01:23:11, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/20/2025 14:24:42
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/20/2025 14:24:42 - 05/21/2025 00:43:08, 类型: Normal, 持续时间: 10:18:25.8746021
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/21/2025 00:43:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/20/2025 23:43:17 - 05/21/2025 00:43:17, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/21/2025 10:32:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/21/2025 10:32:00 - 05/22/2025 01:21:55, 类型: Normal, 持续时间: 14:49:54.5422663
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/22/2025 01:22:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/22/2025 00:22:09 - 05/22/2025 01:22:09, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/22/2025 19:29:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/22/2025 19:29:11 - 05/23/2025 03:18:30, 类型: Normal, 持续时间: 07:49:18.8012578
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/23/2025 03:18:39
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/23/2025 02:18:39 - 05/23/2025 03:18:39, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/23/2025 09:32:36
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/23/2025 09:32:36 - 05/24/2025 02:07:02, 类型: Normal, 持续时间: 16:34:25.5822983
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/24/2025 02:07:10
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/24/2025 01:07:10 - 05/24/2025 02:07:10, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/24/2025 14:39:01
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/24/2025 14:39:01 - 05/25/2025 03:09:35, 类型: Normal, 持续时间: 12:30:34.1074230
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/25/2025 03:09:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/25/2025 02:09:44 - 05/25/2025 03:09:44, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/26/2025 09:49:47
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/26/2025 09:49:47 - 05/27/2025 02:12:39, 类型: Normal, 持续时间: 16:22:51.4906666
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/27/2025 02:12:54
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/27/2025 01:12:54 - 05/27/2025 02:12:54, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/27/2025 19:09:07
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/27/2025 19:09:07 - 05/28/2025 00:08:48, 类型: Normal, 持续时间: 04:59:41.8046838
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 00:08:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/27/2025 23:08:57 - 05/28/2025 00:08:57, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 00:14:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 00:14:57 - 05/28/2025 00:33:16, 类型: Sleep, 持续时间: 00:18:19.1656784
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 05/28/2025 00:33:16
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 05/28/2025 02:06:14
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 02:06:14 - 05/28/2025 02:27:30, 类型: Normal, 持续时间: 00:21:16.4195698
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 02:27:38
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 01:27:38 - 05/28/2025 02:27:38, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 20:34:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 20:34:11 - 05/28/2025 20:46:26, 类型: Normal, 持续时间: 00:12:14.5903770
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 20:46:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 19:46:34 - 05/28/2025 20:46:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 21:00:24
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 21:00:24 - 05/28/2025 21:01:26, 类型: Normal, 持续时间: 00:01:02.4268268
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 21:01:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 20:01:34 - 05/28/2025 21:01:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 21:06:54
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 21:06:54 - 05/28/2025 21:18:41, 类型: Normal, 持续时间: 00:11:47.5487490
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 21:18:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 20:18:50 - 05/28/2025 21:18:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 21:21:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 21:21:12 - 05/28/2025 21:21:32, 类型: Normal, 持续时间: 00:00:20.4415419
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 21:21:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 20:21:51 - 05/28/2025 21:21:51, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 21:27:38
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 21:27:38 - 05/28/2025 21:32:40, 类型: Normal, 持续时间: 00:05:01.4714104
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 21:32:49
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 20:32:49 - 05/28/2025 21:32:49, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/28/2025 21:39:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 21:39:44 - 05/28/2025 23:39:59, 类型: Normal, 持续时间: 02:00:15.1294899
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/28/2025 23:40:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/28/2025 22:40:17 - 05/28/2025 23:40:17, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/29/2025 19:26:37
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/29/2025 19:26:37 - 05/30/2025 03:20:13, 类型: Normal, 持续时间: 07:53:36.2669961
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/30/2025 03:20:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/30/2025 02:20:21 - 05/30/2025 03:20:21, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/30/2025 19:56:27
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/30/2025 19:56:27 - 05/31/2025 04:06:44, 类型: Normal, 持续时间: 08:10:17.2840399
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 05/31/2025 04:07:06
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/31/2025 03:07:06 - 05/31/2025 04:07:06, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 05/31/2025 12:07:41
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 05/31/2025 12:07:41 - 06/01/2025 03:54:47, 类型: Normal, 持续时间: 15:47:06.4981375
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/01/2025 03:55:04
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/01/2025 02:55:04 - 06/01/2025 03:55:04, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/01/2025 11:45:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/01/2025 11:45:17 - 06/02/2025 03:40:53, 类型: Normal, 持续时间: 15:55:35.8797877
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/02/2025 03:43:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/02/2025 02:43:21 - 06/02/2025 03:43:21, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/02/2025 12:27:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/02/2025 12:27:57 - 06/03/2025 00:29:33, 类型: Normal, 持续时间: 12:01:36.6158252
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/03/2025 00:29:45
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/02/2025 23:29:45 - 06/03/2025 00:29:45, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/03/2025 20:20:41
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/03/2025 20:20:41 - 06/04/2025 00:27:31, 类型: Normal, 持续时间: 04:06:50.3477729
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/04/2025 00:27:37
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/03/2025 23:27:37 - 06/04/2025 00:27:37, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/04/2025 19:46:39
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/04/2025 19:46:39 - 06/05/2025 02:37:48, 类型: Normal, 持续时间: 06:51:09.2741292
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/05/2025 02:38:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/05/2025 01:38:34 - 06/05/2025 02:38:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/05/2025 07:41:53
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/05/2025 07:41:53 - 06/05/2025 21:50:41, 类型: Normal, 持续时间: 14:08:47.8067138
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/05/2025 21:50:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/05/2025 20:50:50 - 06/05/2025 21:50:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/05/2025 21:56:59
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/05/2025 21:56:59 - 06/06/2025 02:03:20, 类型: Normal, 持续时间: 04:06:21.7753823
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/06/2025 02:48:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/06/2025 01:48:00 - 06/06/2025 02:48:00, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/06/2025 15:01:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/06/2025 15:01:25 - 06/07/2025 03:25:40, 类型: Normal, 持续时间: 12:24:15.2183576
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/07/2025 03:25:46
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/07/2025 02:25:46 - 06/07/2025 03:25:46, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/07/2025 14:44:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/07/2025 14:44:25 - 06/09/2025 00:24:21, 类型: Normal, 持续时间: 1.09:39:55.7981660
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/09/2025 00:24:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/08/2025 23:24:52 - 06/09/2025 00:24:52, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/09/2025 15:39:23
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/09/2025 15:39:23 - 06/10/2025 00:22:22, 类型: Normal, 持续时间: 08:42:59.6590182
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/10/2025 00:22:29
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/09/2025 23:22:29 - 06/10/2025 00:22:29, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/10/2025 08:41:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/10/2025 08:41:57 - 06/11/2025 01:07:00, 类型: Normal, 持续时间: 16:25:02.8603033
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/11/2025 01:07:46
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/11/2025 00:07:46 - 06/11/2025 01:07:46, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/11/2025 08:38:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/11/2025 08:38:12 - 06/12/2025 07:44:00, 类型: Normal, 持续时间: 23:05:48.7496652
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/12/2025 07:45:23
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/12/2025 06:45:23 - 06/12/2025 07:45:23, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/12/2025 07:46:14
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/12/2025 07:46:14 - 06/13/2025 02:26:51, 类型: Normal, 持续时间: 18:40:36.7111848
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/13/2025 02:28:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/13/2025 01:28:21 - 06/13/2025 02:28:21, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/13/2025 07:44:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/13/2025 07:44:44 - 06/14/2025 02:19:26, 类型: Normal, 持续时间: 18:34:41.9097027
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/14/2025 02:19:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/14/2025 01:19:34 - 06/14/2025 02:19:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/14/2025 10:02:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/14/2025 10:02:09 - 06/14/2025 23:41:30, 类型: Normal, 持续时间: 13:39:21.0798715
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/14/2025 23:41:38
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/14/2025 22:41:38 - 06/14/2025 23:41:38, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/15/2025 10:04:56
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/15/2025 10:04:56 - 06/15/2025 23:39:26, 类型: Normal, 持续时间: 13:34:29.7361007
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/15/2025 23:39:35
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/15/2025 22:39:35 - 06/15/2025 23:39:35, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/16/2025 07:47:27
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/16/2025 07:47:27 - 06/17/2025 02:02:44, 类型: Normal, 持续时间: 18:15:17.1068788
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/17/2025 02:02:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/17/2025 01:02:51 - 06/17/2025 02:02:51, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/17/2025 19:11:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/17/2025 19:11:51 - 06/18/2025 00:29:56, 类型: Normal, 持续时间: 05:18:04.7675294
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/18/2025 00:30:02
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/17/2025 23:30:02 - 06/18/2025 00:30:02, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/18/2025 19:33:20
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/18/2025 19:33:20 - 06/19/2025 03:17:04, 类型: Normal, 持续时间: 07:43:44.0865973
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/19/2025 03:17:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/19/2025 02:17:11 - 06/19/2025 03:17:11, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/19/2025 07:51:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/19/2025 07:51:12 - 06/20/2025 02:22:06, 类型: Normal, 持续时间: 18:30:53.2395278
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/20/2025 02:22:20
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/20/2025 01:22:20 - 06/20/2025 02:22:20, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/20/2025 07:44:26
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/20/2025 07:44:26 - 06/23/2025 03:37:01, 类型: Normal, 持续时间: 2.19:52:35.4434013
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/23/2025 03:37:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/23/2025 02:37:09 - 06/23/2025 03:37:09, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/23/2025 12:02:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/23/2025 12:02:50 - 06/23/2025 18:27:27, 类型: Normal, 持续时间: 06:24:37.5871578
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      检测到唤醒事件，创建新会话: 06/23/2025 21:21:08
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/23/2025 21:21:08 - 06/25/2025 00:31:49, 类型: Normal, 持续时间: 1.03:10:41.0809770
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/25/2025 19:58:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/25/2025 19:58:25 - 06/26/2025 03:16:37, 类型: Normal, 持续时间: 07:18:12.1083866
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/26/2025 03:16:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/26/2025 02:16:44 - 06/26/2025 03:16:44, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/26/2025 10:43:04
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/26/2025 10:43:04 - 06/27/2025 01:44:11, 类型: Normal, 持续时间: 15:01:07.1908765
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/27/2025 01:44:24
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/27/2025 00:44:24 - 06/27/2025 01:44:24, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/27/2025 19:14:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/27/2025 19:14:34 - 06/28/2025 01:39:03, 类型: Normal, 持续时间: 06:24:28.6160114
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/28/2025 01:39:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/28/2025 00:39:09 - 06/28/2025 01:39:09, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/28/2025 11:13:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/28/2025 11:13:17 - 06/29/2025 00:39:23, 类型: Normal, 持续时间: 13:26:06.0459372
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/29/2025 00:43:06
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/28/2025 23:43:06 - 06/29/2025 00:43:06, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/29/2025 12:08:10
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/29/2025 12:08:10 - 06/29/2025 22:28:13, 类型: Normal, 持续时间: 10:20:02.5812276
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 06/29/2025 22:28:28
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/29/2025 21:28:28 - 06/29/2025 22:28:28, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 06/30/2025 21:31:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 06/30/2025 21:31:09 - 07/01/2025 04:23:42, 类型: Normal, 持续时间: 06:52:33.6541577
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/01/2025 04:23:48
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/01/2025 03:23:48 - 07/01/2025 04:23:48, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/01/2025 21:21:58
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/01/2025 21:21:58 - 07/02/2025 02:54:43, 类型: Normal, 持续时间: 05:32:44.2086968
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/02/2025 02:54:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/02/2025 01:54:52 - 07/02/2025 02:54:52, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/02/2025 19:25:30
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/02/2025 19:25:30 - 07/04/2025 01:23:30, 类型: Normal, 持续时间: 1.05:58:00.5851779
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/04/2025 01:23:42
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/04/2025 00:23:42 - 07/04/2025 01:23:42, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/04/2025 19:30:08
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/04/2025 19:30:08 - 07/05/2025 04:10:21, 类型: Normal, 持续时间: 08:40:12.7318377
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/05/2025 04:10:30
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/05/2025 03:10:30 - 07/05/2025 04:10:30, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/05/2025 12:44:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/05/2025 12:44:11 - 07/05/2025 23:16:07, 类型: Normal, 持续时间: 10:31:55.2640046
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/05/2025 23:16:13
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/05/2025 22:16:13 - 07/05/2025 23:16:13, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/06/2025 12:29:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/06/2025 12:29:57 - 07/06/2025 23:47:08, 类型: Normal, 持续时间: 11:17:11.4426473
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/06/2025 23:47:15
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/06/2025 22:47:15 - 07/06/2025 23:47:15, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/07/2025 21:43:15
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/07/2025 21:43:15 - 07/08/2025 01:00:13, 类型: Normal, 持续时间: 03:16:57.2673907
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/08/2025 01:00:19
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/08/2025 00:00:19 - 07/08/2025 01:00:19, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/08/2025 01:01:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/08/2025 01:01:00 - 07/08/2025 01:03:25, 类型: Normal, 持续时间: 00:02:25.0538548
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/08/2025 01:03:33
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/08/2025 00:03:33 - 07/08/2025 01:03:33, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/08/2025 12:40:45
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/08/2025 12:40:45 - 07/09/2025 01:30:45, 类型: Normal, 持续时间: 12:49:59.4570569
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/09/2025 01:30:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/09/2025 00:30:51 - 07/09/2025 01:30:51, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/09/2025 19:44:04
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/09/2025 19:44:04 - 07/10/2025 00:58:32, 类型: Normal, 持续时间: 05:14:27.3886196
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/10/2025 00:59:31
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/09/2025 23:59:31 - 07/10/2025 00:59:31, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/10/2025 01:00:19
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/10/2025 01:00:19 - 07/10/2025 01:01:23, 类型: Normal, 持续时间: 00:01:04.1715842
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/10/2025 01:01:26
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/10/2025 00:01:26 - 07/10/2025 01:01:26, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/10/2025 07:44:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/10/2025 07:44:17 - 07/11/2025 01:25:46, 类型: Normal, 持续时间: 17:41:28.5785590
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/11/2025 01:26:16
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/11/2025 00:26:16 - 07/11/2025 01:26:16, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/11/2025 01:27:04
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/11/2025 01:27:04 - 07/11/2025 01:27:12, 类型: Normal, 持续时间: 00:00:07.6981527
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/11/2025 01:27:40
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/11/2025 00:27:40 - 07/11/2025 01:27:40, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/11/2025 19:42:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/11/2025 19:42:09 - 07/11/2025 23:39:11, 类型: Normal, 持续时间: 03:57:02.5265694
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/11/2025 23:39:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/11/2025 22:39:21 - 07/11/2025 23:39:21, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/12/2025 09:49:24
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/12/2025 09:49:24 - 07/12/2025 10:29:33, 类型: Normal, 持续时间: 00:40:09.4930936
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/12/2025 10:29:40
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/12/2025 09:29:40 - 07/12/2025 10:29:40, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/13/2025 14:36:53
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/13/2025 14:36:53 - 07/13/2025 17:15:47, 类型: Normal, 持续时间: 02:38:54.2437912
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/13/2025 17:15:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/13/2025 16:15:52 - 07/13/2025 17:15:52, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/13/2025 17:16:41
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/13/2025 17:16:41 - 07/13/2025 22:54:44, 类型: Normal, 持续时间: 05:38:02.2228811
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/13/2025 22:54:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/13/2025 21:54:50 - 07/13/2025 22:54:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/14/2025 07:36:30
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/14/2025 07:36:30 - 07/16/2025 01:51:50, 类型: Normal, 持续时间: 1.18:15:20.1956581
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/16/2025 01:52:08
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/16/2025 00:52:08 - 07/16/2025 01:52:08, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/16/2025 07:30:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/16/2025 07:30:50 - 07/17/2025 19:52:41, 类型: Restart, 持续时间: 1.12:21:51.7358986
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/17/2025 17:52:50 - 07/17/2025 19:52:50, 类型: Abnormal, 持续时间: 02:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/17/2025 19:52:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/17/2025 19:52:50 - 07/18/2025 02:04:53, 类型: Normal, 持续时间: 06:12:03.3624650
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/18/2025 02:05:03
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/18/2025 01:05:03 - 07/18/2025 02:05:03, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/18/2025 20:00:16
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/18/2025 20:00:16 - 07/19/2025 04:11:54, 类型: Normal, 持续时间: 08:11:37.9885488
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      检测到唤醒事件，创建新会话: 07/19/2025 05:35:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/19/2025 05:35:11 - 07/20/2025 03:25:59, 类型: Normal, 持续时间: 21:50:48.3274597
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/20/2025 14:53:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/20/2025 14:53:57 - 07/21/2025 01:06:28, 类型: Normal, 持续时间: 10:12:31.3339155
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/21/2025 01:06:37
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/21/2025 00:06:37 - 07/21/2025 01:06:37, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/21/2025 20:49:48
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/21/2025 20:49:48 - 07/22/2025 01:44:44, 类型: Normal, 持续时间: 04:54:55.7467026
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/22/2025 01:44:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/22/2025 00:44:50 - 07/22/2025 01:44:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/22/2025 19:16:13
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/22/2025 19:16:13 - 07/23/2025 00:45:02, 类型: Normal, 持续时间: 05:28:49.2230198
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/23/2025 00:45:07
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/22/2025 23:45:07 - 07/23/2025 00:45:07, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/23/2025 19:18:31
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/23/2025 19:18:31 - 07/24/2025 02:16:58, 类型: Normal, 持续时间: 06:58:27.5390794
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/24/2025 02:17:07
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/24/2025 01:17:07 - 07/24/2025 02:17:07, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/24/2025 19:27:23
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/24/2025 19:27:23 - 07/25/2025 00:31:55, 类型: Normal, 持续时间: 05:04:31.9747253
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/25/2025 00:32:04
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/24/2025 23:32:04 - 07/25/2025 00:32:04, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/25/2025 22:02:42
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/25/2025 22:02:42 - 07/25/2025 23:21:42, 类型: Normal, 持续时间: 01:18:59.9245796
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/25/2025 23:21:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/25/2025 22:21:51 - 07/25/2025 23:21:51, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/26/2025 11:23:33
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/26/2025 11:23:33 - 07/26/2025 23:59:49, 类型: Normal, 持续时间: 12:36:15.8919173
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/26/2025 23:59:56
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/26/2025 22:59:56 - 07/26/2025 23:59:56, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/27/2025 10:21:08
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/27/2025 10:21:08 - 07/28/2025 01:44:30, 类型: Normal, 持续时间: 15:23:21.5615502
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/28/2025 01:44:36
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/28/2025 00:44:36 - 07/28/2025 01:44:36, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/28/2025 19:24:53
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/28/2025 19:24:53 - 07/29/2025 00:45:45, 类型: Normal, 持续时间: 05:20:51.7189948
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/29/2025 00:45:54
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/28/2025 23:45:54 - 07/29/2025 00:45:54, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/29/2025 19:38:45
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/29/2025 19:38:45 - 07/30/2025 01:12:25, 类型: Normal, 持续时间: 05:33:40.5465025
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/30/2025 01:12:32
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/30/2025 00:12:32 - 07/30/2025 01:12:32, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/30/2025 19:25:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/30/2025 19:25:25 - 07/31/2025 01:22:00, 类型: Normal, 持续时间: 05:56:34.4521659
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 07/31/2025 01:22:06
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/31/2025 00:22:06 - 07/31/2025 01:22:06, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 07/31/2025 09:27:19
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 07/31/2025 09:27:19 - 08/01/2025 01:56:47, 类型: Normal, 持续时间: 16:29:28.3502816
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/01/2025 01:56:53
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/01/2025 00:56:53 - 08/01/2025 01:56:53, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/01/2025 08:23:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/01/2025 08:23:44 - 08/02/2025 03:31:43, 类型: Normal, 持续时间: 19:07:59.6465689
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/02/2025 03:31:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/02/2025 02:31:51 - 08/02/2025 03:31:51, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/02/2025 11:18:26
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/02/2025 11:18:26 - 08/03/2025 01:51:56, 类型: Normal, 持续时间: 14:33:29.8944267
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/03/2025 01:52:05
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/03/2025 00:52:05 - 08/03/2025 01:52:05, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/03/2025 17:05:38
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/03/2025 17:05:38 - 08/04/2025 00:08:39, 类型: Normal, 持续时间: 07:03:01.3881232
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/04/2025 00:08:42
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/03/2025 23:08:42 - 08/04/2025 00:08:42, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/04/2025 09:43:24
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/04/2025 09:43:24 - 08/05/2025 02:05:20, 类型: Normal, 持续时间: 16:21:56.0441753
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/05/2025 02:05:30
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/05/2025 01:05:30 - 08/05/2025 02:05:30, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/06/2025 20:13:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/06/2025 20:13:25 - 08/06/2025 20:38:53, 类型: Restart, 持续时间: 00:25:27.3782627
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/06/2025 18:39:01 - 08/06/2025 20:39:01, 类型: Abnormal, 持续时间: 02:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/06/2025 20:39:01
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/06/2025 20:39:01 - 08/07/2025 00:55:26, 类型: Normal, 持续时间: 04:16:24.7428515
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/07/2025 00:55:34
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/06/2025 23:55:34 - 08/07/2025 00:55:34, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/07/2025 17:03:36
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/07/2025 17:03:36 - 08/10/2025 02:44:44, 类型: Normal, 持续时间: 2.09:41:07.4852204
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/10/2025 02:44:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/10/2025 01:44:50 - 08/10/2025 02:44:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/10/2025 12:05:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/10/2025 12:05:52 - 08/10/2025 21:25:13, 类型: Normal, 持续时间: 09:19:20.8270039
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/10/2025 21:27:05
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/10/2025 20:27:05 - 08/10/2025 21:27:05, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/12/2025 00:30:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/12/2025 00:30:57 - 08/12/2025 02:30:18, 类型: Normal, 持续时间: 01:59:21.0494638
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/12/2025 02:30:24
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/12/2025 01:30:24 - 08/12/2025 02:30:24, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/12/2025 19:36:15
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/12/2025 19:36:15 - 08/13/2025 00:37:05, 类型: Normal, 持续时间: 05:00:50.1677065
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/13/2025 00:37:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/12/2025 23:37:12 - 08/13/2025 00:37:12, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/13/2025 12:01:58
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/13/2025 12:01:58 - 08/14/2025 03:30:54, 类型: Normal, 持续时间: 15:28:55.9876114
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/14/2025 03:31:01
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/14/2025 02:31:01 - 08/14/2025 03:31:01, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/14/2025 12:37:11
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/14/2025 12:37:11 - 08/15/2025 00:18:36, 类型: Normal, 持续时间: 11:41:25.0905466
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/15/2025 00:18:44
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/14/2025 23:18:44 - 08/15/2025 00:18:44, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/15/2025 21:15:17
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/15/2025 21:15:17 - 08/15/2025 21:15:50, 类型: Normal, 持续时间: 00:00:32.7708882
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/15/2025 21:15:53
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/15/2025 20:15:53 - 08/15/2025 21:15:53, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/15/2025 21:17:47
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/15/2025 21:17:47 - 08/16/2025 00:36:34, 类型: Normal, 持续时间: 03:18:47.1179665
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/16/2025 00:37:50
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/15/2025 23:37:50 - 08/16/2025 00:37:50, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/16/2025 00:38:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/16/2025 00:38:57 - 08/16/2025 00:40:07, 类型: Normal, 持续时间: 00:01:09.1752849
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/16/2025 00:40:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/15/2025 23:40:12 - 08/16/2025 00:40:12, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/20/2025 10:14:05
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/20/2025 10:14:05 - 08/21/2025 03:15:55, 类型: Normal, 持续时间: 17:01:50.7741604
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/21/2025 03:16:02
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/21/2025 02:16:02 - 08/21/2025 03:16:02, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/21/2025 10:55:12
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/21/2025 10:55:12 - 08/23/2025 03:46:41, 类型: Normal, 持续时间: 1.16:51:29.1341065
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/23/2025 03:46:52
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/23/2025 02:46:52 - 08/23/2025 03:46:52, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/23/2025 09:16:30
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/23/2025 09:16:30 - 08/23/2025 23:38:05, 类型: Normal, 持续时间: 14:21:35.0308799
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/23/2025 23:40:25
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/23/2025 22:40:25 - 08/23/2025 23:40:25, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/24/2025 01:14:27
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/24/2025 01:14:27 - 08/24/2025 02:40:03, 类型: Normal, 持续时间: 01:25:35.9705934
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/24/2025 02:40:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/24/2025 01:40:09 - 08/24/2025 02:40:09, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/24/2025 11:05:16
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/24/2025 11:05:16 - 08/24/2025 22:05:22, 类型: Sleep, 持续时间: 11:00:05.4132995
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 08/24/2025 22:05:22
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 08/26/2025 07:39:18
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/26/2025 07:39:18 - 08/27/2025 01:09:38, 类型: Sleep, 持续时间: 17:30:20.0097070
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 08/27/2025 01:09:38
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 08/27/2025 01:27:47
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/27/2025 01:27:47 - 08/27/2025 02:22:19, 类型: Sleep, 持续时间: 00:54:31.6297819
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 08/27/2025 02:22:19
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 08/27/2025 02:56:51
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/27/2025 02:56:51 - 08/28/2025 01:58:01, 类型: Sleep, 持续时间: 23:01:10.2229524
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 08/28/2025 01:58:01
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 08/28/2025 01:58:03
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/28/2025 01:58:03 - 08/29/2025 01:15:13, 类型: Normal, 持续时间: 23:17:09.8012627
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/29/2025 01:35:03
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/29/2025 00:35:03 - 08/29/2025 01:35:03, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/30/2025 00:13:29
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/30/2025 00:13:29 - 08/30/2025 03:37:10, 类型: Normal, 持续时间: 03:23:40.2233190
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/30/2025 03:37:18
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/30/2025 02:37:18 - 08/30/2025 03:37:18, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/30/2025 08:15:46
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/30/2025 08:15:46 - 08/31/2025 03:06:48, 类型: Normal, 持续时间: 18:51:02.1261870
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 08/31/2025 03:07:08
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/31/2025 02:07:08 - 08/31/2025 03:07:08, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 08/31/2025 11:20:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 08/31/2025 11:20:00 - 09/01/2025 02:40:20, 类型: Normal, 持续时间: 15:20:20.1055606
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 09/01/2025 02:40:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 01:40:57 - 09/01/2025 02:40:57, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 09/01/2025 02:42:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 02:42:21 - 09/01/2025 08:25:14, 类型: Sleep, 持续时间: 05:42:53.3693475
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 09/01/2025 08:25:14
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 09/01/2025 09:17:21
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 09:17:21 - 09/01/2025 17:43:59, 类型: Restart, 持续时间: 08:26:37.5206377
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 15:44:09 - 09/01/2025 17:44:09, 类型: Abnormal, 持续时间: 02:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 09/01/2025 17:44:09
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 17:44:09 - 09/02/2025 00:57:44, 类型: Normal, 持续时间: 07:13:35.5589733
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 09/02/2025 00:58:29
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/01/2025 23:58:29 - 09/02/2025 00:58:29, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 09/02/2025 00:59:45
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/02/2025 00:59:45 - 09/02/2025 04:14:28, 类型: Sleep, 持续时间: 03:14:43.1057155
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 09/02/2025 04:14:28
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 09/02/2025 04:20:10
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/02/2025 04:20:10 - 09/02/2025 04:20:33, 类型: Sleep, 持续时间: 00:00:22.5065554
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 09/02/2025 04:20:33
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 09/02/2025 09:44:29
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/02/2025 09:44:29 - 09/03/2025 02:02:48, 类型: Sleep, 持续时间: 16:18:18.6654391
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 09/03/2025 02:02:48
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 09/03/2025 07:49:14
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/03/2025 07:49:14 - 09/04/2025 03:54:40, 类型: Sleep, 持续时间: 20:05:26.0068694
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统进入睡眠模式: 09/04/2025 03:54:40
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      系统从睡眠模式唤醒: 09/04/2025 07:38:06
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/04/2025 07:38:06 - 09/06/2025 02:02:16, 类型: Normal, 持续时间: 1.18:24:09.8537016
+warn: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      创建估算会话，关机事件没有对应的启动事件: 09/06/2025 02:02:29
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      完成会话: 09/06/2025 01:02:29 - 09/06/2025 02:02:29, 类型: Normal, 持续时间: 01:00:00
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      开始新会话: 09/06/2025 09:46:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      添加当前运行中的会话: 09/06/2025 09:46:57
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      事件处理完成，生成 231 个会话
+info: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      会话分析完成，生成 231 个会话记录
+dbug: TurnedOnTimesView.Core.SessionAnalyzer[0]
+      操作 会话分析 完成，耗时: 25.9044ms
+我们应用程序的前10条启动记录:
+序号,启动时间,关机时间,持续时间,关机原因,关机类型
+1,2025-09-06 09:46:57,未知,00:00:00,系统正在运行,Unknown
+2,2025-09-06 01:02:29,2025-09-06 02:02:29,01:00:00,,Normal
+3,2025-09-04 07:38:06,2025-09-06 02:02:16,18:24:09,,Normal
+4,2025-09-03 07:49:14,2025-09-04 03:54:40,20:05:26,进入睡眠状态,Sleep
+5,2025-09-02 09:44:29,2025-09-03 02:02:48,16:18:18,进入睡眠状态,Sleep
+6,2025-09-02 04:20:10,2025-09-02 04:20:33,00:00:22,进入睡眠状态,Sleep
+7,2025-09-02 00:59:45,2025-09-02 04:14:28,03:14:43,进入睡眠状态,Sleep
+8,2025-09-01 23:58:29,2025-09-02 00:58:29,01:00:00,,Normal
+9,2025-09-01 17:44:09,2025-09-02 00:57:44,07:13:35,,Normal
+10,2025-09-01 15:44:09,2025-09-01 17:44:09,02:00:00,,Abnormal
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
