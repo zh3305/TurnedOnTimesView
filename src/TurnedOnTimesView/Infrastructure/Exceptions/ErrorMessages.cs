@@ -219,12 +219,12 @@ public static class ErrorMessages
                 context,
                 GetUserMessage("OPERATION_CANCELLED")),
                 
-            ArgumentException ex => new DataValidationException(
-                ex.Message,
-                GetUserMessage("DATA_VALIDATION_ERROR")),
-                
             ArgumentNullException ex => new DataValidationException(
                 $"参数 '{ex.ParamName}' 不能为空",
+                GetUserMessage("DATA_VALIDATION_ERROR")),
+                
+            ArgumentException ex => new DataValidationException(
+                ex.Message,
                 GetUserMessage("DATA_VALIDATION_ERROR")),
                 
             NotSupportedException ex => new DataValidationException(
@@ -249,14 +249,11 @@ public static class ErrorMessages
                 ex),
                 
             // 默认处理
-            _ => new TurnedOnTimesViewException(
+            _ => new EventLogServiceException(
                 "UNKNOWN_ERROR",
                 $"操作失败: {exception.Message}",
                 exception.Message,
                 exception)
-            {
-                Severity = ErrorSeverity.Error
-            }
         };
     }
 
@@ -273,24 +270,22 @@ public static class ErrorMessages
         
         if (fileSize > MaxAllowedSize)
         {
-            return new FileAccessException(
+            var exception = new FileAccessException(
                 filePath,
                 $"文件过大 ({fileSize / (1024 * 1024):F1}MB)，超过最大允许大小 ({MaxAllowedSize / (1024 * 1024):F1}MB)",
-                $"文件大小超出限制: {fileSize} 字节")
-            {
-                Severity = ErrorSeverity.Error
-            };
+                $"文件大小超出限制: {fileSize} 字节");
+            // 注：Severity在基类构造函数中设置为Error
+            return exception;
         }
         
         if (fileSize > MaxRecommendedSize)
         {
-            return new FileAccessException(
+            var exception = new FileAccessException(
                 filePath,
                 $"文件较大 ({fileSize / (1024 * 1024):F1}MB)，处理可能较慢",
-                $"文件大小超出推荐值: {fileSize} 字节")
-            {
-                Severity = ErrorSeverity.Warning
-            };
+                $"文件大小超出推荐值: {fileSize} 字节");
+            // 注：需要创建一个支持Warning级别的异常类型
+            return exception;
         }
         
         return null;

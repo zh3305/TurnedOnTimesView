@@ -46,6 +46,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventLogService, EventLogService>();
         services.AddScoped<ISessionAnalyzer, SessionAnalyzer>();
         services.AddSingleton<IDataSourceService, DataSourceService>();
+        
+        // 注册错误跟踪服务
+        services.AddSingleton<IErrorTracker, InMemoryErrorTracker>();
 
         // 注册 ViewModels
         services.AddTransient<MainViewModel>();
