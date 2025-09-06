@@ -329,7 +329,7 @@ public sealed class SessionAnalyzer : ISessionAnalyzer
         // 如果有未完成的会话，先完成它（可能是异常关机）
         if (state.CurrentSession != null)
         {
-            FinalizeSession(state.CurrentSession, evt.TimeGenerated, ShutdownType.Abnormal, 
+            FinalizeSession(state.CurrentSession, evt.TimeGenerated, ShutdownType.Unexpected, 
                 "系统异常关机（检测到新的启动事件）", "Unknown", sessions);
         }
 
@@ -380,7 +380,7 @@ public sealed class SessionAnalyzer : ISessionAnalyzer
             };
         }
 
-        var shutdownType = evt.EventId == 41 ? ShutdownType.Restart : ShutdownType.Abnormal;
+        var shutdownType = evt.EventId == 41 ? ShutdownType.Restart : ShutdownType.Unexpected;
         FinalizeSession(state.CurrentSession, evt.TimeGenerated, shutdownType, 
             evt.ShutdownReason, evt.ProcessInfo, sessions);
 

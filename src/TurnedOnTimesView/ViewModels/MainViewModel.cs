@@ -490,9 +490,15 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         return type switch
         {
             ShutdownType.Normal => "正常关机",
-            ShutdownType.Abnormal => "异常关机",
+            ShutdownType.Forced => "强制关机",
             ShutdownType.Restart => "系统重启",
             ShutdownType.Sleep => "系统睡眠",
+            ShutdownType.Hibernate => "系统休眠",
+            ShutdownType.Unexpected => "意外关机",
+            ShutdownType.UserInitiated => "用户发起",
+            ShutdownType.SystemInitiated => "系统发起",
+            ShutdownType.Startup => "系统启动",
+            ShutdownType.WakeUp => "系统唤醒",
             ShutdownType.Unknown => "未知",
             _ => type.ToString()
         };
@@ -505,7 +511,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     {
         TotalSessions = sessions.Count;
         NormalShutdowns = sessions.Count(s => s.Type == ShutdownType.Normal);
-        AbnormalShutdowns = sessions.Count(s => s.Type == ShutdownType.Abnormal);
+        AbnormalShutdowns = sessions.Count(s => s.Type == ShutdownType.Unexpected || s.Type == ShutdownType.Forced);
         SystemRestarts = sessions.Count(s => s.Type == ShutdownType.Restart);
         SleepEvents = sessions.Count(s => s.Type == ShutdownType.Sleep);
 

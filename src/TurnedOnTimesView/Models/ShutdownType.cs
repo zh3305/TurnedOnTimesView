@@ -14,10 +14,10 @@ public enum ShutdownType
     Normal,
 
     /// <summary>
-    /// 异常关机/意外断电
+    /// 强制关机
     /// </summary>
-    [Description("异常关机")]
-    Abnormal,
+    [Description("强制关机")]
+    Forced,
 
     /// <summary>
     /// 系统重启
@@ -30,6 +30,42 @@ public enum ShutdownType
     /// </summary>
     [Description("系统睡眠")]
     Sleep,
+
+    /// <summary>
+    /// 系统休眠
+    /// </summary>
+    [Description("系统休眠")]
+    Hibernate,
+
+    /// <summary>
+    /// 意外关机/断电
+    /// </summary>
+    [Description("意外关机")]
+    Unexpected,
+
+    /// <summary>
+    /// 用户发起的关机/重启
+    /// </summary>
+    [Description("用户发起")]
+    UserInitiated,
+
+    /// <summary>
+    /// 系统发起的关机/重启
+    /// </summary>
+    [Description("系统发起")]
+    SystemInitiated,
+
+    /// <summary>
+    /// 系统启动
+    /// </summary>
+    [Description("系统启动")]
+    Startup,
+
+    /// <summary>
+    /// 从睡眠/休眠唤醒
+    /// </summary>
+    [Description("系统唤醒")]
+    WakeUp,
 
     /// <summary>
     /// 未知类型

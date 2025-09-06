@@ -53,44 +53,61 @@ public sealed class SystemEvent
     public string ShutdownReason { get; init; } = string.Empty;
 
     /// <summary>
+    /// 关机类型（基于事件ID映射）
+    /// </summary>
+    public ShutdownType ShutdownType { get; init; } = ShutdownType.Unknown;
+
+    /// <summary>
+    /// 关机原因的中文描述
+    /// </summary>
+    public string ShutdownReasonDescription { get; init; } = string.Empty;
+
+    /// <summary>
+    /// 详细的事件描述
+    /// </summary>
+    public string DetailedDescription { get; init; } = string.Empty;
+
+    /// <summary>
     /// 是否为启动事件
     /// </summary>
-    public bool IsStartupEvent => EventId == 6005;
+    public bool IsStartupEvent => ShutdownType == ShutdownType.Startup;
 
     /// <summary>
     /// 是否为关机事件
     /// </summary>
-    public bool IsShutdownEvent => EventId is 6006 or 1074;
+    public bool IsShutdownEvent => ShutdownType is ShutdownType.Normal or ShutdownType.UserInitiated or ShutdownType.SystemInitiated;
 
     /// <summary>
     /// 是否为异常关机事件
     /// </summary>
-    public bool IsAbnormalShutdownEvent => EventId is 6008 or 41;
+    public bool IsAbnormalShutdownEvent => ShutdownType is ShutdownType.Unexpected or ShutdownType.Forced;
 
     /// <summary>
     /// 是否为睡眠事件
     /// </summary>
-    public bool IsSleepEvent => EventId == 42;
+    public bool IsSleepEvent => ShutdownType == ShutdownType.Sleep;
+
+    /// <summary>
+    /// 是否为休眠事件
+    /// </summary>
+    public bool IsHibernateEvent => ShutdownType == ShutdownType.Hibernate;
 
     /// <summary>
     /// 是否为唤醒事件
     /// </summary>
-    public bool IsWakeupEvent => EventId == 1;
+    public bool IsWakeupEvent => ShutdownType == ShutdownType.WakeUp;
 
     /// <summary>
-    /// 获取事件类型描述
+    /// 是否为重启事件
     /// </summary>
-    public string EventTypeDescription => EventId switch
-    {
-        6005 => "系统启动",
-        6006 => "系统关机",
-        1074 => "用户关机",
-        6008 => "意外关机",
-        41 => "意外重启",
-        42 => "系统睡眠",
-        1 => "系统唤醒",
-        _ => "未知事件"
-    };
+    public bool IsRestartEvent => ShutdownType == ShutdownType.Restart;
+
+    /// <summary>
+    /// 获取事件类型描述（使用详细描述或默认描述）
+    /// </summary>
+    public string EventTypeDescription => !string.IsNullOrEmpty(DetailedDescription) 
+        ? DetailedDescription 
+        : ShutdownType.ToString();
 
     public override string ToString()
     {

@@ -23,11 +23,39 @@ public sealed class EventLogService : IEventLogService, IDisposable
 {
     private readonly ILogger<EventLogService> _logger;
     private readonly IMemoryCache _cache;
+    private readonly EventMappingService _eventMappingService;
     private readonly ArrayPool<SystemEvent> _eventPool;
     private readonly ConcurrentDictionary<string, EventLogReader> _readerCache;
     
-    // 关键事件ID常量
-    private static readonly int[] TargetEventIds = { 6005, 6006, 1074, 6008, 41, 42, 1 };
+    // 关键事件ID常量 - 扩展支持更多事件类型
+    private static readonly int[] TargetEventIds = { 
+        // 系统启动事件
+        6005, 6009, 12,
+        // 正常关机事件  
+        6006, 13,
+        // 用户发起的关机/重启事件
+        1074, 1075,
+        // 系统发起的关机事件
+        1076, 1077,
+        // 意外关机事件
+        6008, 6013,
+        // 强制关机/意外重启事件
+        41, 109,
+        // 系统睡眠事件
+        42, 4, 506,
+        // 系统休眠事件
+        27,
+        // 唤醒事件
+        1, 107, 507,
+        // 重启相关事件
+        1001, 1003,
+        // Windows更新相关
+        19, 20,
+        // 服务和应用程序发起
+        4609, 7001, 7034,
+        // 电源按钮事件
+        144, 145
+    };
     
     // 性能优化常量
     private static readonly int MaxConcurrentReaders = Math.Min(Environment.ProcessorCount, 4); // 限制最大并发数
@@ -44,10 +72,14 @@ public sealed class EventLogService : IEventLogService, IDisposable
         @"进程\s+(.+?)\s+(?:\(PID\s+\d+\))?",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    public EventLogService(ILogger<EventLogService> logger, IMemoryCache cache)
+    public EventLogService(
+        ILogger<EventLogService> logger, 
+        IMemoryCache cache,
+        EventMappingService eventMappingService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _eventMappingService = eventMappingService ?? throw new ArgumentNullException(nameof(eventMappingService));
         _eventPool = ArrayPool<SystemEvent>.Shared;
         _readerCache = new ConcurrentDictionary<string, EventLogReader>();
     }
@@ -213,10 +245,16 @@ public sealed class EventLogService : IEventLogService, IDisposable
             var message = eventRecord.FormatDescription() ?? string.Empty;
             var shutdownReason = ExtractShutdownReason(message);
             var processInfo = ExtractProcessInfo(message);
+            var eventId = eventRecord.Id;
+
+            // 使用映射服务获取关机类型和描述
+            var shutdownType = _eventMappingService.GetShutdownType(eventId);
+            var shutdownReasonDescription = _eventMappingService.GetShutdownReasonDescription(shutdownReason);
+            var detailedDescription = _eventMappingService.GetDetailedEventDescription(eventId, message);
 
             return new SystemEvent
             {
-                EventId = eventRecord.Id,
+                EventId = eventId,
                 TimeGenerated = eventRecord.TimeCreated ?? DateTime.Now,
                 Source = eventRecord.ProviderName ?? "Unknown",
                 Message = message,
@@ -224,7 +262,10 @@ public sealed class EventLogService : IEventLogService, IDisposable
                 RecordId = eventRecord.RecordId ?? 0,
                 UserSid = eventRecord.UserId?.ToString(),
                 ProcessInfo = processInfo,
-                ShutdownReason = shutdownReason
+                ShutdownReason = shutdownReason,
+                ShutdownType = shutdownType,
+                ShutdownReasonDescription = shutdownReasonDescription,
+                DetailedDescription = detailedDescription
             };
         }
         catch (Exception ex)

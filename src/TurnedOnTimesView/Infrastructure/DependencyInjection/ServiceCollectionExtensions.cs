@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
         });
 
         // 注册核心服务
+        services.AddSingleton<EventMappingService>();
         services.AddScoped<IEventLogService, EventLogService>();
         services.AddScoped<ISessionAnalyzer, SessionAnalyzer>();
 
