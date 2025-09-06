@@ -1,4 +1,4 @@
-&lt;Window x:Class="TurnedOnTimesView.Views.ErrorDialog"
+<Window x:Class="TurnedOnTimesView.Views.ErrorDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="错误提示"
@@ -10,164 +10,164 @@
         ResizeMode="CanResize"
         ShowInTaskbar="False"
         Icon="/Resources/error.ico"
-        Style="{DynamicResource {x:Type Window}}"&gt;
+        Style="{DynamicResource {x:Type Window}}">
     
-    &lt;Window.Resources&gt;
-        &lt;Style x:Key="HeaderTextStyle" TargetType="TextBlock"&gt;
-            &lt;Setter Property="FontSize" Value="16"/&gt;
-            &lt;Setter Property="FontWeight" Value="SemiBold"/&gt;
-            &lt;Setter Property="Margin" Value="0,0,0,10"/&gt;
-            &lt;Setter Property="TextWrapping" Value="Wrap"/&gt;
-        &lt;/Style&gt;
+    <Window.Resources>
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
         
-        &lt;Style x:Key="MessageTextStyle" TargetType="TextBlock"&gt;
-            &lt;Setter Property="FontSize" Value="12"/&gt;
-            &lt;Setter Property="Margin" Value="0,0,0,15"/&gt;
-            &lt;Setter Property="TextWrapping" Value="Wrap"/&gt;
-            &lt;Setter Property="LineHeight" Value="18"/&gt;
-        &lt;/Style&gt;
+        <Style x:Key="MessageTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="18"/>
+        </Style>
         
-        &lt;Style x:Key="SolutionTextStyle" TargetType="TextBlock"&gt;
-            &lt;Setter Property="FontSize" Value="11"/&gt;
-            &lt;Setter Property="Margin" Value="15,2,0,2"/&gt;
-            &lt;Setter Property="TextWrapping" Value="Wrap"/&gt;
-            &lt;Setter Property="Foreground" Value="#333"/&gt;
-        &lt;/Style&gt;
-    &lt;/Window.Resources&gt;
+        <Style x:Key="SolutionTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="15,2,0,2"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="#333"/>
+        </Style>
+    </Window.Resources>
     
-    &lt;Grid Margin="20"&gt;
-        &lt;Grid.RowDefinitions&gt;
-            &lt;RowDefinition Height="Auto"/&gt;
-            &lt;RowDefinition Height="*"/&gt;
-            &lt;RowDefinition Height="Auto"/&gt;
-            &lt;RowDefinition Height="Auto"/&gt;
-        &lt;/Grid.RowDefinitions&gt;
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         
-        &lt;!-- 错误图标和标题 --&gt;
-        &lt;StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20"&gt;
-            &lt;Image Width="32" Height="32" Margin="0,0,15,0" VerticalAlignment="Top"&gt;
-                &lt;Image.Source&gt;
-                    &lt;DrawingImage&gt;
-                        &lt;DrawingImage.Drawing&gt;
-                            &lt;DrawingGroup ClipGeometry="M0,0 V32 H32 V0 H0 Z"&gt;
-                                &lt;GeometryDrawing Brush="#FFE74C3C" Geometry="M16,0 C24.837,0 32,7.163 32,16 C32,24.837 24.837,32 16,32 C7.163,32 0,24.837 0,16 C0,7.163 7.163,0 16,0 Z" /&gt;
-                                &lt;GeometryDrawing Brush="White" Geometry="M14,8 L18,8 L18,20 L14,20 Z M14,22 L18,22 L18,26 L14,26 Z" /&gt;
-                            &lt;/DrawingGroup&gt;
-                        &lt;/DrawingImage.Drawing&gt;
-                    &lt;/DrawingImage&gt;
-                &lt;/Image.Source&gt;
-            &lt;/Image&gt;
-            &lt;StackPanel&gt;
-                &lt;TextBlock x:Name="ErrorTitleText" 
+        <!-- 错误图标和标题 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+            <Image Width="32" Height="32" Margin="0,0,15,0" VerticalAlignment="Top">
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <DrawingGroup ClipGeometry="M0,0 V32 H32 V0 H0 Z">
+                                <GeometryDrawing Brush="#FFE74C3C" Geometry="M16,0 C24.837,0 32,7.163 32,16 C32,24.837 24.837,32 16,32 C7.163,32 0,24.837 0,16 C0,7.163 7.163,0 16,0 Z" />
+                                <GeometryDrawing Brush="White" Geometry="M14,8 L18,8 L18,20 L14,20 Z M14,22 L18,22 L18,26 L14,26 Z" />
+                            </DrawingGroup>
+                        </DrawingImage.Drawing>
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
+            <StackPanel>
+                <TextBlock x:Name="ErrorTitleText" 
                           Style="{StaticResource HeaderTextStyle}"
                           Foreground="#E74C3C"
-                          Text="操作失败" /&gt;
-                &lt;TextBlock x:Name="ErrorCodeText"
+                          Text="操作失败" />
+                <TextBlock x:Name="ErrorCodeText"
                           FontSize="10"
                           Foreground="#666"
-                          Text="错误代码: UNKNOWN" /&gt;
-            &lt;/StackPanel&gt;
-        &lt;/StackPanel&gt;
+                          Text="错误代码: UNKNOWN" />
+            </StackPanel>
+        </StackPanel>
         
-        &lt;!-- 错误详情区域 --&gt;
-        &lt;ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"&gt;
-            &lt;StackPanel&gt;
-                &lt;!-- 错误消息 --&gt;
-                &lt;TextBlock x:Name="ErrorMessageText" 
+        <!-- 错误详情区域 -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <!-- 错误消息 -->
+                <TextBlock x:Name="ErrorMessageText" 
                           Style="{StaticResource MessageTextStyle}"
-                          Text="发生了未知错误，请稍后重试。" /&gt;
+                          Text="发生了未知错误，请稍后重试。" />
                 
-                &lt;!-- 解决方案建议 --&gt;
-                &lt;Border x:Name="SolutionsSection" 
+                <!-- 解决方案建议 -->
+                <Border x:Name="SolutionsSection" 
                        Background="#F8F9FA" 
                        BorderBrush="#DEE2E6" 
                        BorderThickness="1" 
                        Padding="15" 
                        Margin="0,10,0,0"
-                       CornerRadius="5"&gt;
-                    &lt;StackPanel&gt;
-                        &lt;TextBlock Text="建议的解决方案:" FontWeight="SemiBold" Margin="0,0,0,10"/&gt;
-                        &lt;ItemsControl x:Name="SolutionsList"&gt;
-                            &lt;ItemsControl.ItemTemplate&gt;
-                                &lt;DataTemplate&gt;
-                                    &lt;StackPanel Orientation="Horizontal" Margin="0,2"&gt;
-                                        &lt;TextBlock Text="• " FontWeight="Bold" Margin="0,0,5,0"/&gt;
-                                        &lt;TextBlock Text="{Binding}" Style="{StaticResource SolutionTextStyle}"/&gt;
-                                    &lt;/StackPanel&gt;
-                                &lt;/DataTemplate&gt;
-                            &lt;/ItemsControl.ItemTemplate&gt;
-                        &lt;/ItemsControl&gt;
-                    &lt;/StackPanel&gt;
-                &lt;/Border&gt;
+                       CornerRadius="5">
+                    <StackPanel>
+                        <TextBlock Text="建议的解决方案:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <ItemsControl x:Name="SolutionsList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="• " FontWeight="Bold" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding}" Style="{StaticResource SolutionTextStyle}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
                 
-                &lt;!-- 技术详情展开器 --&gt;
-                &lt;Expander x:Name="TechnicalDetailsExpander" 
+                <!-- 技术详情展开器 -->
+                <Expander x:Name="TechnicalDetailsExpander" 
                          Header="技术详情" 
                          Margin="0,15,0,0"
-                         IsExpanded="False"&gt;
-                    &lt;Border Background="#F8F9FA" 
+                         IsExpanded="False">
+                    <Border Background="#F8F9FA" 
                            BorderBrush="#DEE2E6" 
                            BorderThickness="1" 
                            Padding="15" 
                            Margin="0,5,0,0"
-                           CornerRadius="5"&gt;
-                        &lt;ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto"&gt;
-                            &lt;TextBlock x:Name="TechnicalDetailsText" 
+                           CornerRadius="5">
+                        <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="TechnicalDetailsText" 
                                       FontFamily="Consolas,Monaco,monospace" 
                                       FontSize="10" 
                                       TextWrapping="Wrap"
-                                      Text="无技术详情" /&gt;
-                        &lt;/ScrollViewer&gt;
-                    &lt;/Border&gt;
-                &lt;/Expander&gt;
-            &lt;/StackPanel&gt;
-        &lt;/ScrollViewer&gt;
+                                      Text="无技术详情" />
+                        </ScrollViewer>
+                    </Border>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
         
-        &lt;!-- 重试选项 --&gt;
-        &lt;StackPanel x:Name="RetrySection" 
+        <!-- 重试选项 -->
+        <StackPanel x:Name="RetrySection" 
                    Grid.Row="2" 
                    Orientation="Horizontal" 
                    HorizontalAlignment="Left" 
                    Margin="0,15,0,0"
-                   Visibility="Collapsed"&gt;
-            &lt;CheckBox x:Name="AutoRetryCheckBox" 
+                   Visibility="Collapsed">
+            <CheckBox x:Name="AutoRetryCheckBox" 
                      Content="自动重试" 
-                     Margin="0,0,15,0"/&gt;
-            &lt;TextBlock Text="重试间隔:" VerticalAlignment="Center" Margin="0,0,5,0"/&gt;
-            &lt;ComboBox x:Name="RetryIntervalComboBox" 
+                     Margin="0,0,15,0"/>
+            <TextBlock Text="重试间隔:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <ComboBox x:Name="RetryIntervalComboBox" 
                      Width="80" 
-                     SelectedIndex="1"&gt;
-                &lt;ComboBoxItem Content="1秒" Tag="1000"/&gt;
-                &lt;ComboBoxItem Content="3秒" Tag="3000"/&gt;
-                &lt;ComboBoxItem Content="5秒" Tag="5000"/&gt;
-                &lt;ComboBoxItem Content="10秒" Tag="10000"/&gt;
-            &lt;/ComboBox&gt;
-        &lt;/StackPanel&gt;
+                     SelectedIndex="1">
+                <ComboBoxItem Content="1秒" Tag="1000"/>
+                <ComboBoxItem Content="3秒" Tag="3000"/>
+                <ComboBoxItem Content="5秒" Tag="5000"/>
+                <ComboBoxItem Content="10秒" Tag="10000"/>
+            </ComboBox>
+        </StackPanel>
         
-        &lt;!-- 按钮区域 --&gt;
-        &lt;StackPanel Grid.Row="3" 
+        <!-- 按钮区域 -->
+        <StackPanel Grid.Row="3" 
                    Orientation="Horizontal" 
                    HorizontalAlignment="Right" 
-                   Margin="0,20,0,0"&gt;
-            &lt;Button x:Name="CopyButton" 
+                   Margin="0,20,0,0">
+            <Button x:Name="CopyButton" 
                    Content="复制错误信息" 
                    Width="100" 
                    Height="32" 
                    Margin="0,0,10,0" 
-                   Click="CopyButton_Click"/&gt;
-            &lt;Button x:Name="RetryButton" 
+                   Click="CopyButton_Click"/>
+            <Button x:Name="RetryButton" 
                    Content="重试" 
                    Width="80" 
                    Height="32" 
                    Margin="0,0,10,0" 
                    Click="RetryButton_Click"
-                   Visibility="Collapsed"/&gt;
-            &lt;Button x:Name="OKButton" 
+                   Visibility="Collapsed"/>
+            <Button x:Name="OKButton" 
                    Content="确定" 
                    Width="80" 
                    Height="32" 
                    IsDefault="True" 
-                   Click="OKButton_Click"/&gt;
-        &lt;/StackPanel&gt;
-    &lt;/Grid&gt;
-&lt;/Window&gt;
+                   Click="OKButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
