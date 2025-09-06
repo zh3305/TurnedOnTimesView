@@ -31,16 +31,17 @@ class Program
 
             var sortedSessions = sessions.OrderByDescending(s => s.StartTime).ToList();
 
-            Console.WriteLine("我们应用程序的前10条启动记录:");
+            Console.WriteLine("优化后应用程序的前10条启动记录:");
             Console.WriteLine("序号,启动时间,关机时间,持续时间,关机原因,关机类型");
             
             for (int i = 0; i < Math.Min(10, sortedSessions.Count); i++)
             {
                 var session = sortedSessions[i];
-                var endTimeStr = session.EndTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "未知";
+                var endTimeStr = session.EndTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "运行中";
                 var durationStr = session.Duration.ToString(@"hh\:mm\:ss");
+                var shutdownReason = string.IsNullOrEmpty(session.ShutdownReason) ? "无" : session.ShutdownReason;
                 
-                Console.WriteLine($"{i+1},{session.StartTime:yyyy-MM-dd HH:mm:ss},{endTimeStr},{durationStr},{session.ShutdownReason},{session.Type}");
+                Console.WriteLine($"{i+1},{session.StartTime:yyyy-MM-dd HH:mm:ss},{endTimeStr},{durationStr},{shutdownReason},{session.Type}");
             }
 
             await host.StopAsync();
@@ -65,6 +66,7 @@ class Program
             {
                 services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
                 services.AddMemoryCache();
+                services.AddSingleton<EventMappingService>();
                 services.AddSingleton<IEventLogService, EventLogService>();
                 services.AddSingleton<ISessionAnalyzer, SessionAnalyzer>();
                 services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Error));

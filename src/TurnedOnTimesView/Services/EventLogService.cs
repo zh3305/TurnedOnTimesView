@@ -195,7 +195,10 @@ public sealed class EventLogService : IEventLogService, IDisposable
         {
             try
             {
-                var query = new EventLogQuery("System", PathType.LogName, xpath);
+                // 如果xpath为null，使用无过滤的查询
+                var query = string.IsNullOrEmpty(xpath) 
+                    ? new EventLogQuery("System", PathType.LogName)
+                    : new EventLogQuery("System", PathType.LogName, xpath);
                 using var reader = new EventLogReader(query);
                 
                 long eventCount = 0;
@@ -206,7 +209,11 @@ public sealed class EventLogService : IEventLogService, IDisposable
                 {
                     using (eventRecord)
                     {
-                        eventCount++;
+                        // 只计算我们感兴趣的事件ID
+                        if (TargetEventIds.Contains(eventRecord.Id))
+                        {
+                            eventCount++;
+                        }
                         
                         // 定期检查取消请求
                         if (++batch % batchSize == 0)
@@ -242,10 +249,17 @@ public sealed class EventLogService : IEventLogService, IDisposable
     {
         try
         {
+            var eventId = eventRecord.Id;
+            
+            // 只处理我们感兴趣的事件ID
+            if (!TargetEventIds.Contains(eventId))
+            {
+                return null;
+            }
+            
             var message = eventRecord.FormatDescription() ?? string.Empty;
             var shutdownReason = ExtractShutdownReason(message);
             var processInfo = ExtractProcessInfo(message);
-            var eventId = eventRecord.Id;
 
             // 使用映射服务获取关机类型和描述
             var shutdownType = _eventMappingService.GetShutdownType(eventId);
@@ -305,16 +319,8 @@ public sealed class EventLogService : IEventLogService, IDisposable
     /// </summary>
     private static string BuildOptimizedXPath(string eventIdFilter, DateTime startDate, DateTime endDate)
     {
-        return $@"*[System[
-            (Provider[@Name='Microsoft-Windows-Kernel-General'] or 
-             Provider[@Name='Microsoft-Windows-Kernel-Power'] or 
-             Provider[@Name='Microsoft-Windows-Winlogon'] or 
-             Provider[@Name='EventLog'] or 
-             Provider[@Name='User32']) and 
-            ({eventIdFilter}) and 
-            TimeCreated[@SystemTime>='{startDate:yyyy-MM-ddTHH:mm:ss.fffZ}' and 
-                        @SystemTime<='{endDate:yyyy-MM-ddTHH:mm:ss.fffZ}']
-        ]]";
+        // 不使用XPath，返回null表示使用无过滤的查询
+        return null;
     }
 
     /// <summary>
@@ -332,7 +338,10 @@ public sealed class EventLogService : IEventLogService, IDisposable
         {
             try
             {
-                var query = new EventLogQuery("System", PathType.LogName, xpath);
+                // 如果xpath为null，使用无过滤的查询
+                var query = string.IsNullOrEmpty(xpath) 
+                    ? new EventLogQuery("System", PathType.LogName)
+                    : new EventLogQuery("System", PathType.LogName, xpath);
                 using var eventReader = new EventLogReader(query);
                 
                 EventRecord? eventRecord;

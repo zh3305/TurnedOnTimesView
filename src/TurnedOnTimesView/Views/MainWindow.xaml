@@ -441,6 +441,18 @@
                                                 <DataTrigger Binding="{Binding Type}" Value="Abnormal">
                                                     <Setter Property="Background" Value="#fed7d7"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Unexpected">
+                                                    <Setter Property="Background" Value="#fed7d7"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Forced">
+                                                    <Setter Property="Background" Value="#fbb6ce"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Sleep">
+                                                    <Setter Property="Background" Value="#e2e8f0"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="UserInitiated">
+                                                    <Setter Property="Background" Value="#c6f6d5"/>
+                                                </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="Restart">
                                                     <Setter Property="Background" Value="#bee3f8"/>
                                                 </DataTrigger>
@@ -462,6 +474,22 @@
                                                         <Setter Property="Foreground" Value="#742a2a"/>
                                                         <Setter Property="Text" Value="异常关机"/>
                                                     </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Unexpected">
+                                                        <Setter Property="Foreground" Value="#742a2a"/>
+                                                        <Setter Property="Text" Value="意外关机"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Forced">
+                                                        <Setter Property="Foreground" Value="#97266d"/>
+                                                        <Setter Property="Text" Value="强制关机"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Sleep">
+                                                        <Setter Property="Foreground" Value="#4a5568"/>
+                                                        <Setter Property="Text" Value="睡眠"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="UserInitiated">
+                                                        <Setter Property="Foreground" Value="#22543d"/>
+                                                        <Setter Property="Text" Value="用户关机"/>
+                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding Type}" Value="Restart">
                                                         <Setter Property="Foreground" Value="#2a4365"/>
                                                         <Setter Property="Text" Value="系统重启"/>
@@ -478,10 +506,6 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    
-                    <DataGridTextColumn Header="状态" 
-                                        Binding="{Binding StatusText}"
-                                        Width="80" SortMemberPath="EndTime"/>
                     
                     <DataGridTextColumn Header="关机原因" 
                                         Binding="{Binding ShutdownReason}"
