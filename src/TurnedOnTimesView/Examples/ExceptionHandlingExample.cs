@@ -201,7 +201,8 @@ public static class ExceptionHandlingExample
             (InMemoryErrorTracker)provider.GetRequiredService<IErrorTracker>());
         
         var serviceProvider = services.BuildServiceProvider();
-        var logger = serviceProvider.GetRequiredService<ILogger<ExceptionHandlingExample>>();
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("ExceptionHandlingExample");
         var errorTracker = serviceProvider.GetRequiredService<IErrorTracker>();
         
         // 模拟服务操作

@@ -302,7 +302,7 @@ public class InMemoryErrorTracker : IErrorTracker, IHostedService, IDisposable
     {
         if (_errorRecords.TryGetValue(errorId, out var errorRecord))
         {
-            Interlocked.Increment(ref errorRecord.RetryCount);
+            errorRecord.RetryCount++;
             
             _logger.LogDebug("错误重试次数增加: {ErrorId} - 重试次数: {RetryCount}", 
                 errorId, errorRecord.RetryCount);

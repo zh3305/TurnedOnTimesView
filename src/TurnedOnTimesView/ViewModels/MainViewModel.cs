@@ -279,7 +279,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
                 }
 
                 // 验证并设置数据源
-                await _dataSourceService.SetCurrentDataSourceAsync(dataSource, cancellationToken);
+                await _dataSourceService.SetCurrentDataSourceAsync(dataSource, CancellationToken.None);
                 _logger.LogInformation("成功设置数据源: {DataSourceType}", dataSource.Type);
             }
             catch (TurnedOnTimesViewException appEx)
@@ -307,13 +307,13 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
             
             try
             {
-                var eventCount = await _eventLogService.GetEventCountAsync(dataSource, StartDate, EndDate, cancellationToken);
+                var eventCount = await _eventLogService.GetEventCountAsync(dataSource, StartDate, EndDate, CancellationToken.None);
                 totalEvents = (int)Math.Min(eventCount, int.MaxValue);
                 _logger.LogDebug("预计需要处理 {TotalEvents} 个事件", totalEvents);
                 StatusMessage = $"正在读取事件日志... (预计 {totalEvents} 个事件)";
                 
                 events = await _eventLogService.GetSystemEventsAsync(
-                    dataSource, StartDate, EndDate, cancellationToken);
+                    dataSource, StartDate, EndDate, CancellationToken.None);
                     
                 _logger.LogDebug("成功读取到 {ActualEvents} 个事件", events.Count);
             }

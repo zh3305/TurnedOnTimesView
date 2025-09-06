@@ -587,7 +587,7 @@ public sealed class EventLogService : IEventLogService, IDisposable
                     }
                     catch (EventLogException ex)
                     {
-                        throw new FileFormatException(evtxFilePath, ".evtx", 
+                        throw new Infrastructure.Exceptions.FileFormatException(evtxFilePath, ".evtx", 
                             ErrorMessages.GetUserMessage("FILE_FORMAT_ERROR"), ex);
                     }
                     catch (UnauthorizedAccessException ex)

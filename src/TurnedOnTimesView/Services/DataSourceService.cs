@@ -131,7 +131,7 @@ public sealed class DataSourceService : IDataSourceService, IDisposable
                 // 检查文件扩展名
                 if (!string.Equals(fileInfo.Extension, ".evtx", StringComparison.OrdinalIgnoreCase))
                 {
-                    throw new FileFormatException(filePath, ".evtx", 
+                    throw new Infrastructure.Exceptions.FileFormatException(filePath, ".evtx", 
                         ErrorMessages.GetUserMessage("UNSUPPORTED_FILE_FORMAT"));
                 }
                 
