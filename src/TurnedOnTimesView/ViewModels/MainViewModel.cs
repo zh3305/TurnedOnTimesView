@@ -472,6 +472,9 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
                 EvtxFilePath = openFileDialog.FileName;
                 _logger.LogInformation("用户选择了.evtx文件: {FilePath}", EvtxFilePath);
                 
+                // 自动切换到外部文件模式
+                IsEvtxFileSelected = true;
+                
                 // 添加到最近使用的文件列表
                 _ = Task.Run(async () =>
                 {
