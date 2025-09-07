@@ -469,11 +469,12 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 
             if (openFileDialog.ShowDialog() == true)
             {
+                // 先切换到外部文件模式
+                IsEvtxFileSelected = true;
+                
+                // 然后设置文件路径，这会触发验证和数据加载
                 EvtxFilePath = openFileDialog.FileName;
                 _logger.LogInformation("用户选择了.evtx文件: {FilePath}", EvtxFilePath);
-                
-                // 自动切换到外部文件模式
-                IsEvtxFileSelected = true;
                 
                 // 添加到最近使用的文件列表
                 _ = Task.Run(async () =>
@@ -627,6 +628,12 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
                 }
 
                 _logger.LogInformation("成功验证.evtx文件: {FilePath}", EvtxFilePath);
+                
+                // 如果当前选择的是外部文件模式，立即加载数据
+                if (IsEvtxFileSelected)
+                {
+                    await LoadSessionsAsync();
+                }
             }
             else
             {
